@@ -50,5 +50,5 @@
     "baseColumnName": "title",
     "expression": "grel:if(and(isNonBlank(cells[\"format\"].value.match(/.*(BOOKS|PERIODICALS|ARTICLES).*/)[0]),isNonBlank(cells[\"title\"].value.match(/.+\\D+(\\d+)$/)[0])),true,null)",
     "onError": "set-to-blank"
-  }    
+  }
 ]
