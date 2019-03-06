@@ -79,6 +79,19 @@
   },
   {
     "op": "core/column-addition",
+    "description": "Create column rokYY?? at index 18 based on column rok using expression grel:if(and(isBlank(cells[\"rok\"].value),isNonBlank(cells[\"008 \"].value.substring(7,11).match(/(\\d\\d).*/)[0])),true,null)",
+    "engineConfig": {
+      "mode": "record-based",
+      "facets": []
+    },
+    "newColumnName": "rokYY??",
+    "columnInsertIndex": 18,
+    "baseColumnName": "rok",
+    "expression": "grel:if(and(isBlank(cells[\"rok\"].value),isNonBlank(cells[\"008 \"].value.substring(7,11).match(/(\\d\\d).*/)[0])),true,null)",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
     "description": "Create column autorita at index 9 based on column 100  using expression grel:if(row.index-row.record.fromRowIndex!=0,null,if(isNonBlank(cells[\"100 \"].value.match(/(.*)(\\$7)([^\\$]*)(.*)/)[2]),cells[\"100 \"].value.match(/(.*)(\\$7)([^\\$]*)(.*)/)[2],if(isNonBlank(cells[\"700 \"].value.match(/(.*)(\\$7)([^\\$]*)(.*)/)[2]),cells[\"700 \"].value.match(/(.*)(\\$7)([^\\$]*)(.*)/)[2],null)))",
     "engineConfig": {
       "mode": "record-based",
@@ -131,80 +144,145 @@
   },
   {
     "op": "core/column-addition",
-    "description": "Create column 245aTxt at index 13 based on column 245  using expression grel:cells[\"245 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2].match(/(\\d*\\D+).*/)[0].match(/([^:]+).*/)[0]",
+    "description": "Create column eanIsmnOther at index 13 based on column 024  using expression grel:if(isNonBlank(cells[\"024 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2]),if(cells[\"024 \"].value.substring(0,1)==\"2\",\"ismn\",if(cells[\"024 \"].value.substring(0,1)==\"3\",\"ean\",\"other\")),null)",
+    "engineConfig": {
+      "mode": "record-based",
+      "facets": []
+    },
+    "newColumnName": "eanIsmnOther",
+    "columnInsertIndex": 13,
+    "baseColumnName": "024 ",
+    "expression": "grel:if(isNonBlank(cells[\"024 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2]),if(cells[\"024 \"].value.substring(0,1)==\"2\",\"ismn\",if(cells[\"024 \"].value.substring(0,1)==\"3\",\"ean\",\"other\")),null)",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column pubNumIndicator at index 14 based on column 028  using expression grel:if(isNonBlank(cells[\"028 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2]),cells[\"028 \"].value.substring(0,1),null)",
+    "engineConfig": {
+      "mode": "record-based",
+      "facets": []
+    },
+    "newColumnName": "pubNumIndicator",
+    "columnInsertIndex": 14,
+    "baseColumnName": "028 ",
+    "expression": "grel:if(isNonBlank(cells[\"028 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2]),cells[\"028 \"].value.substring(0,1),null)",
+    "onError": "set-to-blank"
+  },    
+  {
+    "op": "core/column-addition",
+    "description": "Create column 245aTxt at index 15 based on column 245  using expression grel:cells[\"245 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2].match(/(\\d*\\D+).*/)[0].match(/([^:]+).*/)[0]",
     "engineConfig": {
       "mode": "record-based",
       "facets": []
     },
     "newColumnName": "245aTxt",
-    "columnInsertIndex": 13,
+    "columnInsertIndex": 15,
     "baseColumnName": "245 ",
     "expression": "grel:cells[\"245 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2].match(/(\\d*\\D+).*/)[0].match(/([^:]+).*/)[0]",
     "onError": "set-to-blank"
   },    
   {
     "op": "core/column-addition",
-    "description": "Create column 245n at index 14 based on column 245  using expression grel:cells[\"245 \"].value.match(/(.*)(\\$n)([^\\$]*)(.*)/)[2]",
+    "description": "Create column 245n at index 16 based on column 245  using expression grel:cells[\"245 \"].value.match(/(.*)(\\$n)([^\\$]*)(.*)/)[2]",
     "engineConfig": {
       "mode": "record-based",
       "facets": []
     },
     "newColumnName": "245n",
-    "columnInsertIndex": 14,
+    "columnInsertIndex": 16,
     "baseColumnName": "245 ",
     "expression": "grel:cells[\"245 \"].value.match(/(.*)(\\$n)([^\\$]*)(.*)/)[2]",
     "onError": "set-to-blank"
   },
   {
     "op": "core/column-addition",
-    "description": "Create column genre at index 15 based on column 655  using expression grel:toLowercase(cells[\"655 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2])",
+    "description": "Create column genre at index 17 based on column 655  using expression grel:toLowercase(cells[\"655 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2])",
     "engineConfig": {
       "mode": "record-based",
       "facets": []
     },
     "newColumnName": "genre",
-    "columnInsertIndex": 15,
+    "columnInsertIndex": 17,
     "baseColumnName": "655 ",
     "expression": "grel:toLowercase(cells[\"655 \"].value.match(/(.*)(\\$a)([^\\$]*)(.*)/)[2])",
     "onError": "set-to-blank"
   },    
   {
     "op": "core/column-addition",
-    "description": "Create column region at index 16 based on column 650  using expression grel:if(isNonBlank(cells[\"650 \"].value.match(/.*(region|kraj|okres|oblast[^i]).*/)[0]),true,null)",
+    "description": "Create column region at index 18 based on column 650  using expression grel:if(isNonBlank(cells[\"650 \"].value.match(/.*(region|kraj|okres|oblast[^i]).*/)[0]),true,null)",
     "engineConfig": {
       "mode": "record-based",
       "facets": []
     },
     "newColumnName": "region",
-    "columnInsertIndex": 16,
+    "columnInsertIndex": 18,
     "baseColumnName": "650 ",
     "expression": "grel:if(isNonBlank(cells[\"650 \"].value.match(/.*(region|kraj[^i]|okres|oblast[^i]).*/)[0]),true,null)",
     "onError": "set-to-blank"
   },    
   {
     "op": "core/column-addition",
-    "description": "Create column vydavatel at index 17 based on column 260  using expression grel:if(isNonBlank(cells[\"264 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),toLowercase(cells[\"264 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),if(isNonBlank(cells[\"260 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),toLowercase(cells[\"260 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),null))",
+    "description": "Create column vydavatel at index 19 based on column 260  using expression grel:if(isNonBlank(cells[\"264 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),toLowercase(cells[\"264 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),if(isNonBlank(cells[\"260 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),toLowercase(cells[\"260 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),null))",
     "engineConfig": {
       "mode": "record-based",
       "facets": []
     },
     "newColumnName": "vydavatel",
-    "columnInsertIndex": 17,
+    "columnInsertIndex": 19,
     "baseColumnName": "260 ",
     "expression": "grel:if(isNonBlank(cells[\"264 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),toLowercase(cells[\"264 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),if(isNonBlank(cells[\"260 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),toLowercase(cells[\"260 \"].value.match(/(.*)(\\$b)([^\\$]*)(.*)/)[2]),null))",
     "onError": "set-to-blank"
   },     
   {
     "op": "core/column-addition",
-    "description": "Create column 65Xsubjects at index 18 based on column 650  using expression grel:if(isNonBlank(if(isNonBlank(cells[\"610 \"].value),cells[\"610 \"].value,\"\")+if(isNonBlank(cells[\"650 \"].value),cells[\"650 \"].value,\"\")+if(isNonBlank(cells[\"651 \"].value),cells[\"651 \"].value,\"\")+if(isNonBlank(cells[\"653 \"].value),cells[\"653 \"].value,\"\")),toLowercase(if(isNonBlank(cells[\"610 \"].value),cells[\"610 \"].value,\"\")+if(isNonBlank(cells[\"650 \"].value),cells[\"650 \"].value,\"\")+if(isNonBlank(cells[\"651 \"].value),cells[\"651 \"].value,\"\")+if(isNonBlank(cells[\"653 \"].value),cells[\"653 \"].value,\"\")),null)",
+    "description": "Create column 65Xsubjects at index 20 based on column 650  using expression grel:if(isNonBlank(if(isNonBlank(cells[\"610 \"].value),cells[\"610 \"].value,\"\")+if(isNonBlank(cells[\"650 \"].value),cells[\"650 \"].value,\"\")+if(isNonBlank(cells[\"651 \"].value),cells[\"651 \"].value,\"\")+if(isNonBlank(cells[\"653 \"].value),cells[\"653 \"].value,\"\")),toLowercase(if(isNonBlank(cells[\"610 \"].value),cells[\"610 \"].value,\"\")+if(isNonBlank(cells[\"650 \"].value),cells[\"650 \"].value,\"\")+if(isNonBlank(cells[\"651 \"].value),cells[\"651 \"].value,\"\")+if(isNonBlank(cells[\"653 \"].value),cells[\"653 \"].value,\"\")),null)",
     "engineConfig": {
       "mode": "record-based",
       "facets": []
     },
     "newColumnName": "65Xsubjects",
-    "columnInsertIndex": 18,
+    "columnInsertIndex": 20,
     "baseColumnName": "650 ",
     "expression": "grel:if(isNonBlank(if(isNonBlank(cells[\"610 \"].value),cells[\"610 \"].value,\"\")+if(isNonBlank(cells[\"650 \"].value),cells[\"650 \"].value,\"\")+if(isNonBlank(cells[\"651 \"].value),cells[\"651 \"].value,\"\")+if(isNonBlank(cells[\"653 \"].value),cells[\"653 \"].value,\"\")),toLowercase(if(isNonBlank(cells[\"610 \"].value),cells[\"610 \"].value,\"\")+if(isNonBlank(cells[\"650 \"].value),cells[\"650 \"].value,\"\")+if(isNonBlank(cells[\"651 \"].value),cells[\"651 \"].value,\"\")+if(isNonBlank(cells[\"653 \"].value),cells[\"653 \"].value,\"\")),null)",
     "onError": "set-to-blank"
-  }   
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column 773t at index 21 based on column 773  using expression grel:if(isNonBlank(cells[\"773 \"].value.match(/(.*)(\\$t)([^\\$]*)(.*)/)[2]),cells[\"773 \"].value.match(/(.*)(\\$t)([^\\$]*)(.*)/)[2],null)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "773t",
+    "columnInsertIndex": 21,
+    "baseColumnName": "773 ",
+    "expression": "grel:if(isNonBlank(cells[\"773 \"].value.match(/(.*)(\\$t)([^\\$]*)(.*)/)[2]),cells[\"773 \"].value.match(/(.*)(\\$t)([^\\$]*)(.*)/)[2],null)",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column 773g at index 22 based on column 773  using expression grel:if(isNonBlank(cells[\"773 \"].value.match(/(.*)(\\$g)([^\\$]*)(.*)/)[2]),cells[\"773 \"].value.match(/(.*)(\\$g)([^\\$]*)(.*)/)[2],null)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "773g",
+    "columnInsertIndex": 22,
+    "baseColumnName": "773 ",
+    "expression": "grel:if(isNonBlank(cells[\"773 \"].value.match(/(.*)(\\$g)([^\\$]*)(.*)/)[2]),cells[\"773 \"].value.match(/(.*)(\\$g)([^\\$]*)(.*)/)[2],null)",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column 773x at index 23 based on column 773  using expression grel:if(isNonBlank(cells[\"773 \"].value.match(/(.*)(\\$x)([^\\$]*)(.*)/)[2]),cells[\"773 \"].value.match(/(.*)(\\$x)([^\\$]*)(.*)/)[2],null)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "773x",
+    "columnInsertIndex": 23,
+    "baseColumnName": "773 ",
+    "expression": "grel:if(isNonBlank(cells[\"773 \"].value.match(/(.*)(\\$x)([^\\$]*)(.*)/)[2]),cells[\"773 \"].value.match(/(.*)(\\$x)([^\\$]*)(.*)/)[2],null)",
+    "onError": "set-to-blank"
+  }    
 ]
