@@ -5477,4 +5477,16 @@
   "newColumnName": "displaced245c",
   "columnInsertIndex": 28,
   "description": "Create column displaced245c at index 28 based on column outputTitle using expression grel:if(isNonBlank(value),isNonBlank(value.match(/.*([^\\p{L}]([Vv]y(dal|zdobil)|[Pp]řel|[Pp]řelož|[Pp]řeklad(u|em|y|ů|ům|ech)?|([Pp]řekladatel|[Pp]řispěvatel|[Vv]ydavatel)(e|i|em|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|(([Šš]éf)?[Rr]edakto[rř]|[Ee]dito[rř])(a|ovi|em|y|ů|ům|ech|ka|ky|ce|ku|kou|ek|kám|kách|kami)|([Pp]řekladatelsk|[Vv]ydavatelsk|[Kk]ritick)(ý|ého|ému|ém|ým|é|ých|ým|ými|á|ou)?|[Ii]l|[Ii]lustr|[Ii]lustrac(e|emi)|([Dd]oslov|[Úú]vod|[Zz]ávěr)(u|em|y|ů|ům|ech)?|[Pp]ředmluv(a|y|ě|u|ou|ám|ách|ami)?|([Pp]oznám|[Vv]ysvětliv|[Oo]bál)(ka|ky|ce|ku|kou|ek|kám|kách|kami)|[Ee]dičn(í|ího|ímu|ím|ích|ími|ě)|([Kk]omentář|[Rr]ejstřík)(e|i|em|ů|ům|ích)?|[Rr]esumé|[Rr]ediguje|([Nn]avrhl|([Nn]a)?[Kk]reslil|[Ii]lustroval|[Pp]ře(ložil|vyprávěl|básnil)|([Nn]a|[Ss]e)psal|[Pp]ři(pravil|spěl)|[Uu](spořádal|pravil)|[Oo]patřil|([Vv]y|[Ss]e)bral|[Ss]estavil|[Pp]rovedl|[Ss]polupracoval|([Vv]y)?fotografoval|[Dd]o(provodil|plnil)|[Rr]e(digoval|cenzoval)|[Zz]hotovil|[Pp]ořídil)[aiy]?)[^\\p{L}](.*[^\\p{L}])?\\p{Lu}(\\p{L}*|\\.)[\\s]?\\p{Lu}(\\p{L}*|\\.)).*/)[0]),null)"
+}, {
+  "op": "core/column-addition",
+  "engineConfig": {
+    "facets": [],
+    "mode": "row-based"
+  },
+  "baseColumnName": "250",
+  "expression": "grel:replace(value,/[^\\p{L}0-9\\$]/,\"\").match(/.*\\$a([^\\$]+).*/)[0].toLowercase()",
+  "onError": "set-to-blank",
+  "newColumnName": "250a",
+  "columnInsertIndex": 9,
+  "description": "Create column 250a at index 9 based on column 250 using expression grel:replace(value,/[^\\p{L}0-9\\$]/,\"\").match(/.*\\$a([^\\$]+).*/)[0].toLowercase()"
 }]
