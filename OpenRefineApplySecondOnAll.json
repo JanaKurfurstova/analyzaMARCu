@@ -6531,5 +6531,18 @@
         "newColumnName": "nezdedup",
         "columnInsertIndex": 6,
         "description": "Create column nezdedup at index 6 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\""
+    },
+    {
+        "op": "core/column-addition",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "baseColumnName": "250",
+        "expression": "grel:if(isNonBlank(cells[\"OAI\"].value),\nif(isBlank(value),\"1\",if(isNonBlank(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0]),value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0],toLowerCase(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\")))),null)",
+        "onError": "set-to-blank",
+        "newColumnName": "250a",
+        "columnInsertIndex": 10,
+        "description": "Create column 250a at index 10 based on column 250 using expression grel:if(isNonBlank(cells[\"OAI\"].value),\nif(isBlank(value),\"1\",if(isNonBlank(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0]),value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0],toLowercase(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\")))),null)"
     }
 ]
