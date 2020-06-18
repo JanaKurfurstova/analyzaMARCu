@@ -6182,6 +6182,19 @@
         "description": "Text transform on cells in column 245aMultiTest using expression value.replace(/\\s+/,' ')"
     },
     {
+        "op": "core/text-transform",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "columnName": "245aMultiTest",
+        "expression": "grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\")",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10,
+        "description": "Text transform on cells in column 245aMultiTest using expression grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\")"
+    },
+    {
         "op": "core/column-addition",
         "engineConfig": {
             "facets": [],
@@ -6526,7 +6539,7 @@
             "mode": "record-based"
         },
         "baseColumnName": "250",
-        "expression": "grel:if(isNonBlank(cells[\"OAI\"].value),\nif(isBlank(value),\"1\",if(isNonBlank(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0]),value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0],toLowerCase(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\")))),null)",
+        "expression": "grel:if(isNonBlank(cells[\"OAI\"].value),\nif(isBlank(value),\"1\",if(isNonBlank(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0]),value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\").match(/.*^[^0-9]*([0-9]+).*/)[0],toLowercase(value.match(/.*\\$a([^\\$]+).*/)[0].replace(/[^\\p{L}0-9]/,\"\")))),null)",
         "onError": "set-to-blank",
         "newColumnName": "250a",
         "columnInsertIndex": 10,
