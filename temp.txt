@@ -1,0 +1,57 @@
+if
+(
+  and
+  (
+    isNonBlank(cells[\"nezdedup\"].value),
+    isBlank(cells[\"no996\"].value),
+    cells[\"bl_language\"].value.contains(/(cze|slo)/),
+    isBlank(cells[\"245\"].value.match(/.*(\\$c[^\\$]+).*/)[0])),
+  trim(replace(replace(value,/[^\\p{L}0-9\\s]/,\" \"),/\\s+/,\" \")),
+  null
+)
+
+
+if(value.contains(/.*\S+\s([Vv]y(dal|zdobil)|[Pp]řel(ož)?|[Pp]řeklad(e|em|y|ů|ům|ech)?|([Pp]řeklad|[Pp]řispěv|[Vv]ydav)atel(e|i|em|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|(([Šš]éf)?[Rr]edakto[rř]|[Ee]dito[rř])(a|ovi|em|y|ů|ům|ech|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|([Pp]řekladatelsk|[Vv]ydavatelsk|[Kk]ritick)(ý|ého|ému|ém|ým|é|ých|ým|ými|á|ou)|[Ii]l|[Ii]lustr|[Ii]lustrac(e|emi)|([Dd]oslov|[Úú]vod|[Zz]ávěr)(u|em|y|ů|ům|ech)?|[Pp]ředmluv(a|y|ě|u|ou|ám|ách|ami)|([Pp]oznám|[Vv]ysvětliv|[Oo]bál)(ka|ky|ce|ku|kou|ek|kám|kách|kami)|[Ee]dičn(í|ího|ímu|ím|ích|ími|ě)|([Kk]omentář|[Rr]ejstřík)(e|i|em|ů|ům|ích)?|[Rr]esumé|[Rr]ediguje|([Nn]avrhl|([Nn]a)?[Kk]reslil|[Ii]lustroval|[Pp]ře(ložil|vyprávěl|básnil)|([Nn]a|[Ss]e)psal|[Pp]ři(pravil|spěl)|[Uu](spořádal|pravil)|[Oo]patřil|([Vv]y|[Ss]e)bral|[Ss]estavil|[Pp]rovedl|([Ss]polu|[Zz])pracoval|([Vv]y)?[Ff]otografoval|[Dd]o(provodil|plnil)|[Rr]e(digoval|cenzoval)|[Zz]hotovil|[Pp]ořídil)[aiy]?)\s\p{Lu}\S*\s\p{Lu}\S+.*/),true,null),null)
+
+//DĚLAT TO JEN U NEZDEDUPLIKOVANÝCH NEBO NE?
+
+    {
+        "op": "core/column-addition",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "baseColumnName": "genre",
+        "expression": "grel:if(isNonBlank(if(isNonBlank(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),toLowercase(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),null).match(/.*(region|okres|obecní|obce|[\\s]obec[0-9\\$\\s]|[\\s]kraj|oblast).*/)[0]),true,null)",
+        "onError": "set-to-blank",
+        "newColumnName": "region",
+        "columnInsertIndex": 9,
+        "description": "Create column region at index 9 based on column genre using expression grel:if(isNonBlank(if(isNonBlank(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),toLowercase(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),null).match(/.*(region|okres|obecní|obce|[\\s]obec[0-9\\$\\s]|[\\s]kraj|oblast).*/)[0]),true,null)"
+    },
+    {
+        "op": "core/column-addition",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "baseColumnName": "OAI",
+        "expression": "grel:if(isNonBlank(toLowercase(if(isNonBlank(cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0],if(isNonBlank(cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0],null))).match(/.*(knihov|měst|úřad|mu[sz]e[uaj]|galeri|obec|obc[eí]|spolek|druž|institut|výbor|vlastní|centrum|podnik|komor|společnost|ateliér|gymn[aá][sz]i|škol|učiliš).*/)[0]),true,null)",
+        "onError": "set-to-blank",
+        "newColumnName": "regionPub",
+        "columnInsertIndex": 10,
+        "description": "Create column regionPub at index 10 based on column OAI using expression grel:if(isNonBlank(toLowercase(if(isNonBlank(cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0],if(isNonBlank(cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0],null))).match(/.*(knihov|měst|úřad|mu[sz]e[uaj]|galeri|obec|obc[eí]|spolek|druž|institut|výbor|vlastní|centrum|podnik|komor|společnost|ateliér|gymn[aá][sz]i|škol|učiliš).*/)[0]),true,null)"
+    },
+
+        {
+        "op": "core/text-transform",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "columnName": "genre",
+        "expression": "grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\")",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10,
+        "description": "genre: Odstranění diakritiky."
+    },

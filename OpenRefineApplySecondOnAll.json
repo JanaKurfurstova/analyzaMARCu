@@ -10,7 +10,7 @@
         "onError": "keep-original",
         "repeat": false,
         "repeatCount": 10,
-        "description": "Text transform on cells in column Column 1 using expression grel:replace(value,/^LEADER /,'LDR ')"
+        "description": "LEADER na LDR."
     },
     {
         "op": "core/column-addition",
@@ -23,7 +23,7 @@
         "onError": "set-to-blank",
         "newColumnName": "Column 2",
         "columnInsertIndex": 1,
-        "description": "Create column Column 2 at index 1 based on column Column 1 using expression grel:value.substring(4)"
+        "description": "Rozdělení na sloupce: Označení pole - obsah pole."
     },
     {
         "op": "core/text-transform",
@@ -36,14 +36,42 @@
         "onError": "keep-original",
         "repeat": false,
         "repeatCount": 10,
-        "description": "Text transform on cells in column Column 1 using expression grel:value.substring(0,3)"
+        "description": "Třímístné označní pole."
+    },
+    {
+      "op": "core/row-removal",
+      "engineConfig": {
+        "facets": [
+          {
+            "type": "list",
+            "name": "Column 1",
+            "expression": "grel:contains(value,/([a-z]|\\W)/)",
+            "columnName": "Column 1",
+            "invert": false,
+            "omitBlank": false,
+            "omitError": false,
+            "selection": [
+              {
+                "v": {
+                  "v": true,
+                  "l": "true"
+                }
+              }
+            ],
+            "selectBlank": false,
+            "selectError": false
+          }
+        ],
+        "mode": "row-based"
+      },
+      "description": "Odstranění balastních řádků (kvůli anotacím v Kohách)."
     },
     {
         "op": "core/key-value-columnize",
         "keyColumnName": "Column 1",
         "valueColumnName": "Column 2",
         "noteColumnName": "",
-        "description": "Columnize by key column Column 1 and value column Column 2 with note column "
+        "description": "Překlopení tabulky do 90 stupňů."
     },
     {
         "op": "core/column-move",
@@ -6062,7 +6090,7 @@
         "onError": "keep-original",
         "repeat": false,
         "repeatCount": 10,
-        "description": "Text transform on cells in column OAI using expression grel:replace(value,/  \\$a/,\"\")"
+        "description": "Extrakce OAI identifikátoru."
     },
     {
         "op": "core/column-addition",
@@ -6075,7 +6103,7 @@
         "onError": "set-to-blank",
         "newColumnName": "LDRdoctype",
         "columnInsertIndex": 1,
-        "description": "Create column LDRdoctype at index 1 based on column LDR using expression grel:value.substring(6,8)"
+        "description": "LDRdoctype: LDR|06 + LDR|07"
     },
     {
         "op": "core/column-addition",
@@ -6084,11 +6112,24 @@
             "mode": "record-based"
         },
         "baseColumnName": "245",
-        "expression": "grel:trim(replace(value.match(/.*\\$h([^\\$^\\]]+).*/)[0],/[^\\p{L} ]/,\"\"))",
+        "expression": "grel:trim(toLowercase(replace(value.match(/.*\\$h([^\\$^\\]]+).*/)[0],/[^\\p{L} ]/,\"\")))",
         "onError": "set-to-blank",
         "newColumnName": "245h",
         "columnInsertIndex": 2,
-        "description": "Create column 245h at index 2 based on column 245 using expression grel:trim(replace(value.match(/.*\\$h([^\\$^\\]]+).*/)[0],/[^\\p{L} ]/,\"\"))"
+        "description": "245h"
+    },
+    {
+        "op": "core/text-transform",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "columnName": "245h",
+        "expression": "grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\")",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10,
+        "description": "Odstranění diakritiky z 245h."
     },
     {
         "op": "core/column-addition",
@@ -6101,8 +6142,21 @@
         "onError": "set-to-blank",
         "newColumnName": "300doctype",
         "columnInsertIndex": 3,
-        "description": "Create column 300doctype at index 3 based on column OAI using expression grel:replace(trim(toLowercase(replace(cells[\"300\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^\\p{L} ]/,\"\"))),/\\s+/,\" \")"
+        "description": "300doctype: písmena z 300$a"
     },
+    {
+        "op": "core/text-transform",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "columnName": "300doctype",
+        "expression": "grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\")",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10,
+        "description": "Odstranění diakritky z 300a."
+    },    
     {
         "op": "core/column-addition",
         "engineConfig": {
@@ -6110,12 +6164,25 @@
             "mode": "record-based"
         },
         "baseColumnName": "655",
-        "expression": "grel:toLowercase(value.match(/.*\\$a([^\\$]+).*/)[0])",
+        "expression": "grel:if(and(value.substring(1,2)!=\"9\",value.contains(\"$7\")),toLowercase(value.match(/.*\\$a([^\\$]+).*/)[0]),null)",
         "onError": "set-to-blank",
         "newColumnName": "genre",
         "columnInsertIndex": 4,
-        "description": "Create column genre at index 4 based on column 655 using expression grel:toLowercase(value.match(/.*\\$a([^\\$]+).*/)[0])"
+        "description": "genre: Žánr z 655$a. Pouze české termíny, které mají $7 (ne vždy fd*, ale aspoň tvořené za použití stejných jazykových principů)."
     },
+    {
+        "op": "core/text-transform",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "columnName": "genre",
+        "expression": "grel:if(contains(replace(value,/\\s\\(.*\\)/,\"\"),/\\s/),replace(replace(replace(value,/\\s\\(.*\\)/,\"\"),/[\\-\\p{L}]+([áéůý]|[cč]í|(?<!(vydá|cviče|jedná|sděle|naříze))ní|(?<!pomů)cky|(?<!(de|ti))sky|fi|antasy)([^\\p{L}]|$)/,\"\"),/^a\\s/,\"\").match(/^(\\p{L}+).*/)[0],replace(value,/\\s\\(.*\\)/,\"\"))",
+        "onError": "keep-original",
+        "repeat": false,
+        "repeatCount": 10,
+        "description": "genre: Konsolidace hodnot (pouze pro české termíny)."
+    },    
     {
         "op": "core/column-addition",
         "engineConfig": {
@@ -6123,24 +6190,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "040",
-        "expression": "grel:toLowercase(value.match(/.*\\$e([^\\$]+).*/)[0])",
-        "onError": "set-to-blank",
-        "newColumnName": "040e",
-        "columnInsertIndex": 5,
-        "description": "Create column 040e at index 5 based on column 040 using expression grel:toLowercase(value.match(/.*\\$e([^\\$]+).*/)[0])"
-    },
-    {
-        "op": "core/column-addition",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "baseColumnName": "040",
-        "expression": "grel:value.match(/.*\\$a([^\\$]+).*/)[0]",
+        "expression": "grel:toUppercase(value.match(/.*\\$a([^\\$]+).*/)[0])",
         "onError": "set-to-blank",
         "newColumnName": "040a",
-        "columnInsertIndex": 6,
-        "description": "Create column 040a at index 6 based on column 040 using expression grel:value.match(/.*\\$a([^\\$]+).*/)[0]"
+        "columnInsertIndex": 5,
+        "description": "040a: Sigla původce záznamu. V některých systémech nemusí odpovídat realitě."
     },
     {
         "op": "core/column-addition",
@@ -6152,8 +6206,8 @@
         "expression": "grel:if(or(isNonBlank(value.match(/.*\\$n([^\\$]+).*/)[0]),isNonBlank(value.match(/.*\\$p([^\\$]+).*/)[0])),true,null)",
         "onError": "set-to-blank",
         "newColumnName": "vicedil",
-        "columnInsertIndex": 7,
-        "description": "Create column vicedil at index 7 based on column 245 using expression grel:if(or(isNonBlank(value.match(/.*\\$n([^\\$]+).*/)[0]),isNonBlank(value.match(/.*\\([^\\$]+).*/)[0])),true,null)"
+        "columnInsertIndex": 6,
+        "description": "vicedil: 245 obsahuje $p nebo $n."
     },
     {
         "op": "core/column-addition",
@@ -6162,64 +6216,12 @@
             "mode": "record-based"
         },
         "baseColumnName": "245",
-        "expression": "grel:toLowercase(trim(replace(value.match(/.*\\$a([^\\$^\\]]+).*/)[0],/[^\\p{L} ]/,\"\")))",
+        "expression": "grel:toLowercase(trim(replace(replace(value.match(/.*\\$a([^\\$^\\]]+).*/)[0],/[^\\p{L} ]/,\" \"),/\\s+\/,\" \")))",
         "onError": "set-to-blank",
         "newColumnName": "245aMultiTest",
-        "columnInsertIndex": 8,
-        "description": "Create column 245aMultiTest at index 8 based on column 245 using expression grel:toLowercase(trim(replace(value.match(/.*\\$a([^\\$^\\]]+).*/)[0],/[^\\p{L} ]/,\"\")))"
-    },
-    {
-        "op": "core/text-transform",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "columnName": "245aMultiTest",
-        "expression": "value.replace(/\\s+/,' ')",
-        "onError": "keep-original",
-        "repeat": false,
-        "repeatCount": 10,
-        "description": "Text transform on cells in column 245aMultiTest using expression value.replace(/\\s+/,' ')"
-    },
-    {
-        "op": "core/text-transform",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "columnName": "245aMultiTest",
-        "expression": "grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\")",
-        "onError": "keep-original",
-        "repeat": false,
-        "repeatCount": 10,
-        "description": "Text transform on cells in column 245aMultiTest using expression grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\")"
-    },
-    {
-        "op": "core/column-addition",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "baseColumnName": "genre",
-        "expression": "grel:if(isNonBlank(if(isNonBlank(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),toLowercase(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),null).match(/.*(region|okres|obecní|obce|[\\s]obec[0-9\\$\\s]|[\\s]kraj|oblast).*/)[0]),true,null)",
-        "onError": "set-to-blank",
-        "newColumnName": "region",
-        "columnInsertIndex": 9,
-        "description": "Create column region at index 9 based on column genre using expression grel:if(isNonBlank(if(isNonBlank(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),toLowercase(if(isNonBlank(cells[\"610\"].value),cells[\"610\"].value,\"\")+if(isNonBlank(cells[\"650\"].value),cells[\"650\"].value,\"\")+if(isNonBlank(cells[\"651\"].value),cells[\"651\"].value,\"\")+if(isNonBlank(cells[\"653\"].value),cells[\"653\"].value,\"\")),null).match(/.*(region|okres|obecní|obce|[\\s]obec[0-9\\$\\s]|[\\s]kraj|oblast).*/)[0]),true,null)"
-    },
-    {
-        "op": "core/column-addition",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "baseColumnName": "OAI",
-        "expression": "grel:if(isNonBlank(toLowercase(if(isNonBlank(cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0],if(isNonBlank(cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0],null))).match(/.*(knihov|měst|úřad|mu[sz]e[uaj]|galeri|obec|obc[eí]|spolek|druž|institut|výbor|vlastní|centrum|podnik|komor|společnost|ateliér|gymn[aá][sz]i|škol|učiliš).*/)[0]),true,null)",
-        "onError": "set-to-blank",
-        "newColumnName": "regionPub",
-        "columnInsertIndex": 10,
-        "description": "Create column regionPub at index 10 based on column OAI using expression grel:if(isNonBlank(toLowercase(if(isNonBlank(cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"260\"].value.match(/.*\\$b([^\\$]+).*/)[0],if(isNonBlank(cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0]),cells[\"264\"].value.match(/.*\\$b([^\\$]+).*/)[0],null))).match(/.*(knihov|měst|úřad|mu[sz]e[uaj]|galeri|obec|obc[eí]|spolek|druž|institut|výbor|vlastní|centrum|podnik|komor|společnost|ateliér|gymn[aá][sz]i|škol|učiliš).*/)[0]),true,null)"
-    },
+        "columnInsertIndex": 7,
+        "description": "245aMultiTest: Písmena z 245$a. Pomocný sloupec pro kontrolu duplicit."
+    },   
     {
         "op": "core/column-addition",
         "engineConfig": {
@@ -6230,7 +6232,7 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value",
         "onError": "set-to-blank",
         "newColumnName": "title",
-        "columnInsertIndex": 7,
+        "columnInsertIndex": 6,
         "description": "Create column title at index 7 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value"
     },
     {
@@ -6268,9 +6270,9 @@
         "baseColumnName": "OAI",
         "expression": "grel:toNumber(replace(cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"publication_year\"].value,\",\",\"\"))",
         "onError": "set-to-blank",
-        "newColumnName": "publication_year",
+        "newColumnName": "rok",
         "columnInsertIndex": 1,
-        "description": "Create column publication_year at index 1 based on column OAI using expression grel:toNumber(replace(cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"publication_year\"].value,\",\",\"\"))"
+        "description": "Create column rok at index 1 based on column OAI using expression grel:toNumber(replace(cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"publication_year\"].value,\",\",\"\"))"
     },
     {
         "op": "core/column-addition",
@@ -6282,7 +6284,7 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value",
         "onError": "set-to-blank",
         "newColumnName": "bl_language",
-        "columnInsertIndex": 8,
+        "columnInsertIndex": 7,
         "description": "Create column bl_language at index 8 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value"
     },
     {
@@ -6405,41 +6407,15 @@
     {
         "op": "core/column-addition",
         "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
+          "facets": [],
+          "mode": "row-based"
         },
-        "baseColumnName": "publication_year",
-        "expression": "grel:toNumber(cells[\"008\"].value.substring(7,11))==value",
+        "baseColumnName": "OAI",
+        "expression": "grel:cell.cross(\"KNIHOVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\"",
         "onError": "set-to-blank",
-        "newColumnName": "yearMatch",
-        "columnInsertIndex": 11,
-        "description": "Create column yearMatch at index 11 based on column publication_year using expression grel:toNumber(cells[\"008\"].value.substring(7,11))==value"
-    },
-    {
-        "op": "core/column-addition",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "baseColumnName": "format",
-        "expression": "grel:if(and(isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"format\"].value.match(/.*(BOOKS).*/)[0]),isNonBlank(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/))),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"),null),if(and(isBlank(cells[\"issn\"].value),isNonBlank(cells[\"format\"].value.match(/.*(PERIODICALS).*/)[0]),length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6),replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"),null))",
-        "onError": "set-to-blank",
-        "newColumnName": "isnValidity",
-        "columnInsertIndex": 12,
-        "description": "Create column isnValidity at index 12 based on column format using expression grel:if(and(isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"format\"].value.match(/.*(BOOKS).*/)[0]),isNonBlank(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/))),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"),null),if(and(isBlank(cells[\"issn\"].value),isNonBlank(cells[\"format\"].value.match(/.*(PERIODICALS).*/)[0]),length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6),replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"),null))"
-    },
-    {
-        "op": "core/column-addition",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "baseColumnName": "publication_year",
-        "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"isbn\"].value),isBlank(cells[\"issn\"].value),isBlank(cells[\"isnValidity\"].value),value>=1989),\"missing\",null)",
-        "onError": "set-to-blank",
-        "newColumnName": "isnAfter1989",
-        "columnInsertIndex": 13,
-        "description": "Create column isnAfter1989 at index 13 based on column publication_year using expression grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"isbn\"].value),isBlank(cells[\"issn\"].value),isBlank(cells[\"isnValidity\"].value),value>=1989),\"missing\",null)"
+        "newColumnName": "nezdedup",
+        "columnInsertIndex": 3,
+        "description": "Create column nezdedup at index 3 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\""
     },
     {
         "op": "core/column-addition",
@@ -6450,9 +6426,9 @@
         "baseColumnName": "OAI",
         "expression": "grel:if(isNonBlank(value),if(isNonBlank(cells[\"020\"].value),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"))>6,replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"),if(isNonBlank(cells[\"022\"].value),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"))>6,replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"),null),null)),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"))>6,replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"),null)),null)",
         "onError": "set-to-blank",
-        "newColumnName": "outputISN",
+        "newColumnName": "ISN",
         "columnInsertIndex": 2,
-        "description": "Create column outputISN at index 2 based on column OAI using expression grel:if(isNonBlank(value),if(isNonBlank(cells[\"020\"].value),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"))>6,replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"),if(isNonBlank(cells[\"022\"].value),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"))>6,replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"),null),null)),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"))>6,replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9Xx\\-]/,\"\"),null)),null)"
+        "description": "ISN: Bere hodnoty z podpolí 020$ a 022$a, které jsou asi ISBN nebo ISSN, včetně nevalidních hodnot. Určeno pro exporty."
     },
     {
         "op": "core/column-addition",
@@ -6463,9 +6439,9 @@
         "baseColumnName": "OAI",
         "expression": "grel:replace(if(isNonBlank(value),cells[\"245\"].value.match(/.*\\$a([^\\$]+).*/)[0]+if(isNonBlank(cells[\"245\"].value.match(/.*\\$b([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$b([^\\$]+).*/)[0],\"\")+if(isNonBlank(cells[\"245\"].value.match(/.*\\$n([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$n([^\\$]+).*/)[0],\"\")+if(isNonBlank(cells[\"245\"].value.match(/.*\\$p([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$p([^\\$]+).*/)[0],\"\"),null),/\\s+/,\" \")",
         "onError": "set-to-blank",
-        "newColumnName": "outputTitle",
+        "newColumnName": "titul",
         "columnInsertIndex": 1,
-        "description": "Create column outputTitle at index 1 based on column OAI using expression grel:replace(if(isNonBlank(value),cells[\"245\"].value.match(/.*\\$a([^\\$]+).*/)[0]+if(isNonBlank(cells[\"245\"].value.match(/.*\\$b([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$b([^\\$]+).*/)[0],\"\")+if(isNonBlank(cells[\"245\"].value.match(/.*\\$n([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$n([^\\$]+).*/)[0],\"\")+if(isNonBlank(cells[\"245\"].value.match(/.*\\$p([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$p([^\\$]+).*/)[0],\"\"),null),/\\s+/,\" \")"
+        "description": "Create column titul at index 1 based on column OAI using expression grel:replace(if(isNonBlank(value),cells[\"245\"].value.match(/.*\\$a([^\\$]+).*/)[0]+if(isNonBlank(cells[\"245\"].value.match(/.*\\$b([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$b([^\\$]+).*/)[0],\"\")+if(isNonBlank(cells[\"245\"].value.match(/.*\\$n([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$n([^\\$]+).*/)[0],\"\")+if(isNonBlank(cells[\"245\"].value.match(/.*\\$p([^\\$]+).*/)[0]),\" \"+cells[\"245\"].value.match(/.*\\$p([^\\$]+).*/)[0],\"\"),null),/\\s+/,\" \")"
     },
     {
         "op": "core/column-addition",
@@ -6476,9 +6452,22 @@
         "baseColumnName": "OAI",
         "expression": "grel:if(isNonBlank(value),if(isNonBlank(cells[\"100\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"100\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"110\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"110\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"700\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"700\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"710\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"710\"].value.match(/.*\\$a([^\\$]+).*/)[0],\"\")))),null)",
         "onError": "set-to-blank",
-        "newColumnName": "outputAuthor",
+        "newColumnName": "autor",
         "columnInsertIndex": 1,
-        "description": "Create column outputAuthor at index 1 based on column OAI using expression grel:if(isNonBlank(value),if(isNonBlank(cells[\"100\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"100\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"110\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"110\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"700\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"700\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"710\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"710\"].value.match(/.*\\$a([^\\$]+).*/)[0],\"\")))),null)"
+        "description": "Create column autor at index 1 based on column OAI using expression grel:if(isNonBlank(value),if(isNonBlank(cells[\"100\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"100\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"110\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"110\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"700\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"700\"].value.match(/.*\\$a([^\\$]+).*/)[0],if(isNonBlank(cells[\"710\"].value.match(/.*\\$a([^\\$]+).*/)[0]),cells[\"710\"].value.match(/.*\\$a([^\\$]+).*/)[0],\"\")))),null)"
+    },  
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "format",
+      "expression": "grel:if(and(isNonBlank(value),not(value.contains(/.*ARTICLES.*/)),isBlank(cells[\"996\"].value)),true,null)",
+      "onError": "set-to-blank",
+      "newColumnName": "no996",
+      "columnInsertIndex": 7,
+      "description": "no996: Nečlánkové záznamy bez jednotek jsou TRUE."
     },
     {
         "op": "core/column-addition",
@@ -6486,25 +6475,12 @@
             "facets": [],
             "mode": "record-based"
         },
-        "baseColumnName": "245aMultiTest",
-        "expression": "grel:if(and(isNonBlank(value),isNonBlank(cells[\"996\"].value),isBlank(cells[\"outputAuthor\"].value),isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"outputTitle\"].value.match(/.*([0-9]).*/)[0]),or(and(isNonBlank(cells[\"format\"].value.match(/.*(BOOKS).*/)[0]),isBlank(cells[\"outputTitle\"].value.match(/.*((\\$[a-z]|[^\\p{L}])([dD]íl|[čČ]ást|[Ss]v|[Aa]lmanach|[Zz]ákon[y]?)([^\\p{L}]|$)).*/)[0])),and(isBlank(cells[\"format\"].value.match(/.*(PERIODICALS|BOOKS).*/)[0]),isNonBlank(cells[\"outputTitle\"].value.match(/.*((\\$[a-z]|[^\\p{L}])(([čČ]|[Rr]oč)([^\\p{L}]|$)|[Rr]očník)).*/)[0])))),value,null)",
+        "baseColumnName": "rok",
+        "expression": "grel:if(and(isBlank(cells[\"no996\"].value),isNonBlank(value),isNonBlank(cells[\"nezdedup\"].value)),if(toNumber(cells[\"008\"].value.substring(7,11))==value,null,true),null)",
         "onError": "set-to-blank",
-        "newColumnName": "245aSerialTest",
-        "columnInsertIndex": 26,
-        "description": "Create column 245aSerialTest at index 26 based on column 245aMultiTest using expression grel:if(and(isNonBlank(value),isNonBlank(cells[\"996\"].value),isBlank(cells[\"outputAuthor\"].value),isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"outputTitle\"].value.match(/.*([0-9]).*/)[0]),or(and(isNonBlank(cells[\"format\"].value.match(/.*(BOOKS).*/)[0]),isBlank(cells[\"outputTitle\"].value.match(/.*((\\$[a-z]|[^\\p{L}])([dD]íl|[čČ]ást|[Ss]v|[Aa]lmanach|[Zz]ákon[y]?)([^\\p{L}]|$)).*/)[0])),and(isBlank(cells[\"format\"].value.match(/.*(PERIODICALS|BOOKS).*/)[0]),isNonBlank(cells[\"outputTitle\"].value.match(/.*((\\$[a-z]|[^\\p{L}])(([čČ]|[Rr]oč)([^\\p{L}]|$)|[Rr]očník)).*/)[0])))),value,null)"
-    },
-    {
-        "op": "core/text-transform",
-        "engineConfig": {
-          "facets": [],
-          "mode": "record-based"
-        },
-        "columnName": "245aMultiTest",
-        "expression": "grel:replace(value,/\\s+/,\"\")",
-        "onError": "keep-original",
-        "repeat": false,
-        "repeatCount": 10,
-        "description": "Text transform on cells in column 245aMultiTest using expression grel:replace(value,/\\s+/,\"\")"
+        "newColumnName": "yearMismatch",
+        "columnInsertIndex": 15,
+        "description": "yearMismatch: Nezdeduplikované neanalytické záznamy s jednotkami a nesedícími roky v 008 a 26X."
     },
     {
         "op": "core/column-addition",
@@ -6512,13 +6488,176 @@
         "facets": [],
          "mode": "row-based"
         },
-        "baseColumnName": "publication_year",
-        "expression": "grel:if(isNonBlank(cells[\"OAI\"].value),and(isBlank(cells[\"008\"].value.substring(7,11).match(/([0-9]{2}[u]{2}|[0-9]{3}u)/)[0]),isBlank(cells[\"publication_year\"].value),and(isBlank(cells[\"260\"].value.match(/.*\\$c([^\\$]+).*/)[0]),isBlank(cells[\"264\"].value.match(/.*\\$c([^\\$]+).*/)[0]))),null)",
+        "baseColumnName": "rok",
+        "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isNonBlank(cells[\"nezdedup\"].value),or(isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/.*ARTICLES.*/)),isBlank(cells[\"rok\"].value),isBlank(cells[\"260\"].value.match(/.*\\$c([^\\$]+).*/)[0]),isBlank(cells[\"264\"].value.match(/.*\\$c([^\\$]+).*/)[0]),isBlank(cells[\"008\"].value.substring(7,11).match(/([0-9]{2}[u]{2}|[0-9]{3}u)/)[0])),true,null)",
         "onError": "set-to-blank",
-        "newColumnName": "missing_year",
-        "columnInsertIndex": 15,
-        "description": "Create column missing_year at index 15 based on column publication_year using expression grel:if(isNonBlank(cells[\"OAI\"].value),and(isBlank(cells[\"008\"].value.substring(7,11).match(/([0-9]{2}[u]{2}|[0-9]{3}u)/)[0]),isBlank(cells[\"publication_year\"].value),and(isBlank(cells[\"260\"].value.match(/.*\\$c([^\\$]+).*/)[0]),isBlank(cells[\"264\"].value.match(/.*\\$c([^\\$]+).*/)[0]))),null)"
-    },    
+        "newColumnName": "noYear",
+        "columnInsertIndex": 16,
+        "description": "noYear: Nezdeduplilované záznamy (s jednotkou nebo analytické), které nemají ani přibližné datum vydání."
+    },
+    {
+        "op": "core/column-addition",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "baseColumnName": "format",
+        "expression": "grel:if(and(isBlank(cells[\"no996\"].value),or(value.contains(/.*BOOKS.*/),value.contains(/.*PERIODICALS.*/))),if(and(isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),if(and(isBlank(cells[\"issn\"].value),isNonBlank(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),null)),null)",
+        "onError": "set-to-blank",
+        "newColumnName": "invalidISN",
+        "columnInsertIndex": 17,
+        "description": "invalidISN: Pokud existuje nějaký číselný údaj zadaný jako ISBN nebo ISSN, ale neutvořil se klíč, pak TRUE. Pouze záznamy s jednotkami."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "format",
+      "expression": "grel:if(and(isNonBlank(cells[\"nezdedup\"].value),cells[\"format\"].value.contains(/.*ARTICLES.*/)),\"773\"+replace(join(sort(cells[\"773\"].value.find(/\\$./)),\"\"),/\\$/,\"\"),null)",
+      "onError": "set-to-blank",
+      "newColumnName": "773check",
+      "columnInsertIndex": 9,
+      "description": "773check: Seznam podpolí 773 u nezdeduplikovaných článků"
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "996",
+      "expression": "grel:cells[\"996\"].value.match(/.*\\$s([^\\$]+).*/)[0]",
+      "onError": "set-to-blank",
+      "newColumnName": "996s",
+      "columnInsertIndex": 9,
+      "description": "996s"
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "titul",
+      "expression": "grel:if(and(isNonBlank(cells[\"nezdedup\"].value),cells[\"format\"].value.contains(/.*BOOKS.*/),isBlank(cells[\"no996\"].value)),value.match(/.*(^|[^\\p{L}])(CD|MC|LP|DVD)([^\\p{L}]|$).*/)[1],null)",
+      "onError": "set-to-blank",
+      "newColumnName": "titulNosic",
+      "columnInsertIndex": 15,
+      "description": "titulNosic: Nezdeduplikované knihy s jednotkou, které mají v názvu CD, MC, LP nebo DVD."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "245aMultiTest",
+      "expression": "grel:if(and(isNonBlank(value),isBlank(cells[\"no996\"].value),isBlank(cells[\"autor\"].value),isBlank(cells[\"isbn\"].value),cells[\"format\"].value.contains(/.*(BOOKS|PERIODICALS).*/),cells[\"titul\"].value.contains(/^\\S.+\\s[0-9]+.*/)),if(cells[\"245aMultiTest\"].value.contains(/(^|\\s)(díl|část|sv|svazek|zákon[y]?|ency[\\p{L}]lop[\\p{L}]+di[\\p{L}]+|slovník|zpráva|rozpočet|ročenka|almanach|sborník)(\\s|$)/),null,if(cells[\"245aMultiTest\"].value.contains(/[\\p{L}]+\\s(č|číslo|r|roč|ročník)(\\s|$)/),cells[\"245aMultiTest\"].value,null)),null)",
+    "onError": "set-to-blank",
+    "newColumnName": "245aSerialTest",
+    "columnInsertIndex": 30,
+    "description": "245aSerialTest: Sloupec pro odchyt kusově zapsaných seriálů."
+  },
+  {
+      "op": "core/text-transform",
+      "engineConfig": {
+          "facets": [],
+          "mode": "record-based"
+      },
+      "columnName": "245aMultiTest",
+      "expression": "grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\"),/\\s+/,'')",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 11,
+      "description": "245aMultiTest: Odstranění diakritiky a mezer."
+  },
+  {
+      "op": "core/text-transform",
+      "engineConfig": {
+          "facets": [],
+          "mode": "record-based"
+      },
+      "columnName": "245aSerialTest",
+      "expression": "grel:replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(value,/[áä]/,\"a\"),\"č\",\"c\"),\"ď\",\"d\"),/[éě]/,\"e\"),\"í\",\"i\"),/[ĺľ]/,\"l\"),\"ň\",\"n\"),/[óôö]/,\"o\"),/[ŕř]/,\"r\"),\"š\",\"s\"),\"ť\",\"t\"),/[úůü]/,\"u\"),\"ý\",\"y\"),\"ž\",\"z\"),/\\s+/,'')",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 11,
+      "description": "245aSerialTest: Odstranění diakritiky a mezer."
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "245aSerialTest",
+    "expression": "grel:if(and(isNonBlank(value),facetCount(value,'value','245aSerialTest')>1),true,null)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "245aSerialTest: TRUE z opakujících se hodnot. Určeno pro filtrování. Do exportu dávat hodnoty z 245aMultiTest."
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "titul",
+    "expression": "grel:if(and(isNonBlank(cells[\"nezdedup\"].value),isBlank(cells[\"no996\"].value),or(isBlank(cells[\"bl_language\"].value),cells[\"bl_language\"].value.contains(/(cze|slo|und|zxx)/))),trim(replace(replace(value,/[^\\p{L}0-9\\s]/,\" \"),/\\s+/,\" \")),null)",
+    "onError": "set-to-blank",
+    "newColumnName": "displaced245c",
+    "columnInsertIndex": 31,
+    "description": "displaced245c: Připraví názvové hodnoty pro hledání zatoulaných údajů o odpovědnosti. Vytvoří se pouze pro nezdeduplikované české a slovenské věci s jednotkami."
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "displaced245c",
+    "expression": "grel:if(isNonBlank(value),if(value.contains(/.*\\S+\\s([Vv]y(dal|zdobil)|[Pp]řel(ož)?|[Pp]řeklad(e|em|y|ů|ům|ech)?|([Pp]řeklad|[Pp]řispěv|[Vv]ydav)atel(e|i|em|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|(([Šš]éf)?[Rr]edakto[rř]|[Ee]dito[rř])(a|ovi|em|y|ů|ům|ech|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|([Pp]řekladatelsk|[Vv]ydavatelsk|[Kk]ritick)(ý|ého|ému|ém|ým|é|ých|ým|ými|á|ou)|[Ii]l|[Ii]lustr|[Ii]lustrac(e|emi)|([Dd]oslov|[Úú]vod|[Zz]ávěr)(u|em|y|ů|ům|ech)?|[Pp]ředmluv(a|y|ě|u|ou|ám|ách|ami)|([Pp]oznám|[Vv]ysvětliv|[Oo]bál)(ka|ky|ce|ku|kou|ek|kám|kách|kami)|[Ee]dičn(í|ího|ímu|ím|ích|ími|ě)|([Kk]omentář|[Rr]ejstřík)(e|i|em|ů|ům|ích)?|[Rr]esumé|[Rr]ediguje|([Nn]avrhl|([Nn]a)?[Kk]reslil|[Ii]lustroval|[Pp]ře(ložil|vyprávěl|básnil)|([Nn]a|[Ss]e)psal|[Pp]ři(pravil|spěl)|[Uu](spořádal|pravil)|[Oo]patřil|([Vv]y|[Ss]e)bral|[Ss]estavil|[Pp]rovedl|([Ss]polu|[Zz])pracoval|([Vv]y)?[Ff]otografoval|[Dd]o(provodil|plnil)|[Rr]e(digoval|cenzoval)|[Zz]hotovil|[Pp]ořídil)[aiy]?)\\s\\p{Lu}\\S*\\s\\p{Lu}\\S+.*/),true,null),null)",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column displaced245c using expression grel:if(isNonBlank(value),if(value.contains(/.*\\S+\\s([Vv]y(dal|zdobil)|[Pp]řel(ož)?|[Pp]řeklad(e|em|y|ů|ům|ech)?|([Pp]řeklad|[Pp]řispěv|[Vv]ydav)atel(e|i|em|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|(([Šš]éf)?[Rr]edakto[rř]|[Ee]dito[rř])(a|ovi|em|y|ů|ům|ech|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|([Pp]řekladatelsk|[Vv]ydavatelsk|[Kk]ritick)(ý|ého|ému|ém|ým|é|ých|ým|ými|á|ou)|[Ii]l|[Ii]lustr|[Ii]lustrac(e|emi)|([Dd]oslov|[Úú]vod|[Zz]ávěr)(u|em|y|ů|ům|ech)?|[Pp]ředmluv(a|y|ě|u|ou|ám|ách|ami)|([Pp]oznám|[Vv]ysvětliv|[Oo]bál)(ka|ky|ce|ku|kou|ek|kám|kách|kami)|[Ee]dičn(í|ího|ímu|ím|ích|ími|ě)|([Kk]omentář|[Rr]ejstřík)(e|i|em|ů|ům|ích)?|[Rr]esumé|[Rr]ediguje|([Nn]avrhl|([Nn]a)?[Kk]reslil|[Ii]lustroval|[Pp]ře(ložil|vyprávěl|básnil)|([Nn]a|[Ss]e)psal|[Pp]ři(pravil|spěl)|[Uu](spořádal|pravil)|[Oo]patřil|([Vv]y|[Ss]e)bral|[Ss]estavil|[Pp]rovedl|([Ss]polu|[Zz])pracoval|([Vv]y)?[Ff]otografoval|[Dd]o(provodil|plnil)|[Rr]e(digoval|cenzoval)|[Zz]hotovil|[Pp]ořídil)[aiy]?)\\s\\p{Lu}\\S*\\s\\p{Lu}\\S+.*/),true,null),null)"
+  },
+
+
+////////////////////////////////////////////////////////////
+// GREY
+////////////////////////////////////////////////////////////
+    {
+        "op": "core/column-addition",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "baseColumnName": "rok",
+        "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"isbn\"].value),isBlank(cells[\"issn\"].value),isBlank(cells[\"isnValidity\"].value),value>=1989),\"missing\",null)",
+        "onError": "set-to-blank",
+        "newColumnName": "isnAfter1989",
+        "columnInsertIndex": 13,
+        "description": "Create column isnAfter1989 at index 13 based on column rok using expression grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"isbn\"].value),isBlank(cells[\"issn\"].value),isBlank(cells[\"isnValidity\"].value),value>=1989),\"missing\",null)"
+    },
+
+    // {
+    //     "op": "core/text-transform",
+    //     "engineConfig": {
+    //       "facets": [],
+    //       "mode": "record-based"
+    //     },
+    //     "columnName": "245aMultiTest",
+    //     "expression": "grel:replace(value,/\\s+/,\"\")",
+    //     "onError": "keep-original",
+    //     "repeat": false,
+    //     "repeatCount": 10,
+    //     "description": "Text transform on cells in column 245aMultiTest using expression grel:replace(value,/\\s+/,\"\")"
+    // },
+        
     {
         "op": "core/column-addition",
         "engineConfig": {
@@ -6532,19 +6671,7 @@
         "columnInsertIndex": 28,
         "description": "Create column displaced245c at index 28 based on column outputTitle using expression grel:if(isNonBlank(value),isNonBlank(value.match(/.*([^\\p{L}]([Vv]y(dal|zdobil)|[Pp]řel|[Pp]řelož|[Pp]řeklad(u|em|y|ů|ům|ech)?|([Pp]řekladatel|[Pp]řispěvatel|[Vv]ydavatel)(e|i|em|ka|ky|ce|ku|kou|ek|kám|kách|kami)?|(([Šš]éf)?[Rr]edakto[rř]|[Ee]dito[rř])(a|ovi|em|y|ů|ům|ech|ka|ky|ce|ku|kou|ek|kám|kách|kami)|([Pp]řekladatelsk|[Vv]ydavatelsk|[Kk]ritick)(ý|ého|ému|ém|ým|é|ých|ým|ými|á|ou)?|[Ii]l|[Ii]lustr|[Ii]lustrac(e|emi)|([Dd]oslov|[Úú]vod|[Zz]ávěr)(u|em|y|ů|ům|ech)?|[Pp]ředmluv(a|y|ě|u|ou|ám|ách|ami)?|([Pp]oznám|[Vv]ysvětliv|[Oo]bál)(ka|ky|ce|ku|kou|ek|kám|kách|kami)|[Ee]dičn(í|ího|ímu|ím|ích|ími|ě)|([Kk]omentář|[Rr]ejstřík)(e|i|em|ů|ům|ích)?|[Rr]esumé|[Rr]ediguje|([Nn]avrhl|([Nn]a)?[Kk]reslil|[Ii]lustroval|[Pp]ře(ložil|vyprávěl|básnil)|([Nn]a|[Ss]e)psal|[Pp]ři(pravil|spěl)|[Uu](spořádal|pravil)|[Oo]patřil|([Vv]y|[Ss]e)bral|[Ss]estavil|[Pp]rovedl|[Ss]polupracoval|([Vv]y)?fotografoval|[Dd]o(provodil|plnil)|[Rr]e(digoval|cenzoval)|[Zz]hotovil|[Pp]ořídil)[aiy]?)[^\\p{L}](.*[^\\p{L}])?\\p{Lu}(\\p{L}*|\\.)[\\s]?\\p{Lu}(\\p{L}*|\\.)).*/)[0]),null)"
     },
-    {
-        "op": "core/column-addition",
-        "engineConfig": {
-          "facets": [],
-          "mode": "row-based"
-        },
-        "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\"",
-        "onError": "set-to-blank",
-        "newColumnName": "nezdedup",
-        "columnInsertIndex": 6,
-        "description": "Create column nezdedup at index 6 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\""
-    },
+
     {
         "op": "core/column-addition",
         "engineConfig": {
