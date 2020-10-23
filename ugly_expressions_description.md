@@ -1,8 +1,8 @@
 # Popis funkce složitějších výrazů a prostor pro návrhy jejich vylepšení:
-Proto že OpenRefine nemá rád komentáře v JSONu.
 
 **PŘI ÚPRAVÁCH POZOR!!!**
 Ptáme-li se, zda NULL obsahuje něco, výsledkem není FALSE (boolean), ale chyba.
+
 Je-li v podmínce ověřování obsahu pole, je třeba jej napřed otestovat na prázdnost.
 
 ## 6180: Konsolidace českých hodnot v 655$ (sloupec `genre`)
@@ -14,6 +14,7 @@ Snaží se vykuchat podstatná jména (aby "německé romány" a "české román
 
 ### Co s tím lze dělat dál:
 Můžou tam lézt slova, která nejsou tím hlavním podstatným jménem v termínu.
+
 Na ty je třeba přidat výjimku.
 
 **Současné výjimky jsou:**
@@ -34,10 +35,12 @@ Na ty je třeba přidat výjimku.
 
 ### Co to dělá:
 Pokud je v 020$a nebo 022$a po odstranění všech znaků kromě číslic, spojovníků a písmene X řetězec delší než 6 znaků, pak se tato hodnota zapíše do sloupce.
+
 Slouží to pro exporty, tj. aby bylo v seznamu vidět, co je tam skutečně napsané, i kdyby to byl paskvil.
 
 ### Co může dělat problémy:
 Pokud tam knihovna píše nějaké jiné divné kódy než ISBN či ISSN, pak jsou ve sloupci jen fragmenty.
+
 Pokud se v podpoli vyskytují čísla, spojovníky nebo písmena Xx ještě někde dál v řetězci, pak výstup taky nedává smysl.
 
 ## 6492: Indikátor chybějících roků (sloupec `noYear`)
@@ -46,6 +49,7 @@ Pokud se v podpoli vyskytují čísla, spojovníky nebo písmena Xx ještě něk
 
 ### Co to dělá:
 Označuje záznamy, kde jsou více než 3 "u" v 008|07-10 a neexistuje obsah v 260$c nebo 264$c.
+
 Bere jen nezdeduplikované věci s jednotkama a články.
 
 ## 6505: Indikátor nevalidních ISBN, ISSN a ISMN (sloupec `invalidISN`)
@@ -165,18 +169,24 @@ Přidávat či ubírat podezřelá slova. Současný seznam byla sestaven podle 
 
 ### Co to dělá:
 Sloupec pro kontrolu duplicit. Knihovny nemůžou za sloučení různých vydání z téhož roku.
+
 Extrahuje první posloupnost čísel v podpoli 250$a.
+
 Není-li v 250$a číslo, extrahuje text.
+
 Je-li 250$a prázdné, dosadí "1".
 
 ## 6648: Indikátor neurčených kartografických dokumentů (sloupec `neMapy`)
 
-`if(and(isNonBlank(cells[\"OAI\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),true,null),null)`
+`if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),true,null),null)`
 
 ### Co to dělá:
 Pokud žánr nebo název naznačuje, že jde o kartografický dokument, pak TRUE.
+
 V názvu se hledá měřítko nebo podezřelé slovo.
+
 Rezignace na rozpoznávání podle 653 (praxe měnších knihoven), protože pak tam leze cokoliv, co obsahuje třeba jen jednu mapu ve spoustě textu.
+
 Bere i zdeduplikované záznamy (schválně).
 
 ### Co s tím lze dělat dál:
@@ -199,10 +209,13 @@ Lze upravovat podmínky pro názvové údaje.
 
 ## 6661: Indikátor neurčených hudebnin (sloupec `neNoty`)
 
-`if(and(isNonBlank(cells[\"OAI\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),true,null)\n,null)`
+`if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),true,null)\n,null)`
 
 ### Co to dělá:
 Pokud žánr, název nebo volné klíčové slovo naznačuje, že jde o hudebninu, pak TRUE.
+
+Odstraněno pravidlo pro odchytávání 245$h hudebnin bez kódovaných údajů (006|00 zde už nebudeme požadovat).
+
 Bere i zdeduplikované záznamy (schválně).
 
 ### Co s tím lze dělat dál:

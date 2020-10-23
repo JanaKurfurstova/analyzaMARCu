@@ -6245,7 +6245,7 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value",
         "onError": "set-to-blank",
         "newColumnName": "author_string",
-        "columnInsertIndex": 10,
+        "columnInsertIndex": 9,
         "description": "Create column author_string at index 10 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value"
     },
     {
@@ -6258,7 +6258,7 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value",
         "onError": "set-to-blank",
         "newColumnName": "author_auth_key",
-        "columnInsertIndex": 11,
+        "columnInsertIndex": 10,
         "description": "Create column author_auth_key at index 11 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value"
     },
     {
@@ -6388,7 +6388,7 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value",
         "onError": "set-to-blank",
         "newColumnName": "bl_publisher",
-        "columnInsertIndex": 21,
+        "columnInsertIndex": 20,
         "description": "Create column bl_publisher at index 21 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value"
     },
     {
@@ -6645,11 +6645,11 @@
         "mode": "record-based"
       },
       "baseColumnName": "format",
-      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),true,null),null)",
+      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),true,null),null)",
       "onError": "set-to-blank",
       "newColumnName": "neMapy",
       "columnInsertIndex": 10,
-      "description": "neMapy: Hledání kartografických dokumentů zapsaných jako textové či vizuální dokumenty."
+      "description": "neMapy: Hledání kartografických dokumentů zapsaných jako textové či vizuální dokumenty. Pouze pro záznamy s jednotkami."
     },
     {
       "op": "core/column-addition",
@@ -6658,14 +6658,157 @@
         "mode": "record-based"
       },
       "baseColumnName": "format",
-      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),true,null)\n,null)",
+      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),true,null)\n,null)",
       "onError": "set-to-blank",
       "newColumnName": "neNoty",
       "columnInsertIndex": 10,
-      "description": "neNoty: Hledání hudebnin zapsaných jako textové dokumenty."
+      "description": "neNoty: Hledání hudebnin zapsaných jako textové dokumenty. Pouze pro záznamy s jednotkami."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "787",
+      "expression": "grel:if(isNonBlank(value),if(value.contains(/\\$i[Zz] cyklu/),trim(toLowercase(replace(replace(value.match(/.*\\$t([^\\$]+).*/)[0],/[^\\p{L}0-9\\s]/,\" \"),/\\s+/,\" \")))\n,null),null)",
+      "onError": "set-to-blank",
+      "newColumnName": "zCyklu",
+      "columnInsertIndex": 31,
+      "description": "zCyklu: Faseta na cykly z 787."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "publisher_number",
+      "expression": "grel:if(and(isNonBlank(cells[\"028\"].value),isBlank(cells[\"no996\"].value),isNonBlank(cells[\"nezdedup\"].value),cells[\"format\"].value.contains(/AUDIO/)),if(isNonBlank(value),\"ok\",cells[\"028\"].value.substring(0,1)),null)",
+      "onError": "set-to-blank",
+      "newColumnName": "pnCheck",
+      "columnInsertIndex": 31,
+      "description": "pnCheck: Zjišťuje podíl rozpoznatelných nakladatelských čísel (OK) v nezdeduplikovaných záznamech audiodokumentů, u nerozpoznatelných vypíše první indikátor. Pouze pro záznamy s jednotkami."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "ean",
+      "expression": "grel:if(and(isNonBlank(value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/AUDIO|VIDEO/)),if(isBlank(cells[\"nezdedup\"].cells),\"zdedup\",\"nezdedup\"),null)",
+      "onError": "set-to-blank",
+      "newColumnName": "eanCheck",
+      "columnInsertIndex": 30,
+      "description": "eanCheck: Zjišťuje podíl zdeduplikovaných a nezdeduplikovaných AV záznamů s EANem a jednotkami."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "cnb",
+      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),isNonBlank(value)),if(isBlank(cells[\"nezdedup\"].cells),\"zdedup\",\"nezdedup\"),null)",
+      "onError": "set-to-blank",
+      "newColumnName": "cnbCheck",
+      "columnInsertIndex": 28,
+      "description": "cnbCheck: Zjišťuje podíl zdeduplikovaných a nezdeduplikovaných záznamů s čČNB a jednotkami."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "author_auth_key",
+      "expression": "grel:if(and(isBlank(cells[\"author_string\"].value),or(isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/ARTICLES/))),null,if(isBlank(value),if(isBlank(cells[\"nezdedup\"].value),\"A0D1\",\"A0D0\"),if(isBlank(cells[\"nezdedup\"].value),\"A1D1\",\"A1D0\")))",
+      "onError": "set-to-blank",
+      "newColumnName": "authkeyCheck",
+      "columnInsertIndex": 42,
+      "description": "authkeyCheck: U záznamů s hlavním personálním autorem (s jednotkami nebo analytické) rozlišuje: A0D0 - nezdeduplikované bez autority, A0D1 - zdeduplikované bez autority, A1D0 - nezdeduplikované s autoritou, A1D1 - zdeduplikované s autoritou."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "format",
+      "expression": "grel:if(isBlank(cells[\"OAI\"].value),null,if(or(isBlank(cells[\"nezdedup\"].value),isNonBlank(cells[\"no996\"].value),not(cells[\"format\"].value.contains(/BOOKS/)),isNonBlank(cells[\"noYear\"].value),isNonBlank(cells[\"yearMismatch\"].value),isNonBlank(cells[\"245aSerialTest\"].value),isNonBlank(cells[\"titulNosic\"].value),isNonBlank(cells[\"neMapy\"].value),isNonBlank(cells[\"neNoty\"].value),isNonBlank(cells[\"zCyklu\"].value))\n,false,if(cells[\"rok\"].value<1890,true,null)))",
+      "onError": "set-to-blank",
+      "newColumnName": "oldORgrey",
+      "columnInsertIndex": 10,
+      "description": "oldORgrey: První kolo hledání šedé a staré literatury. Vyloučí nejjednodušeji vyloučitelné záznamy a označí věci starší než 1890."
+    },
+    {
+      "op": "core/text-transform",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "columnName": "oldORgrey",
+      "expression": "grel:if(and(isNonBlank(cells[\"titul\"].value),isBlank(value)),if(contains(trim(toLowercase(replace(cells[\"titul\"].value,/[^\\p{L}]+/,\" \"))),/(^|\\s)(katalog|plán|program|(prů|vý)zkum|report|ročenka|sborník|soupis|studie|zpráva)(\\s|$)/),true,null),value)",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 10,
+      "description": "oldORgrey: Druhé kolo hledání šedé a staré literatury. Přidá TRUE tam, kde je podezřelé slovo v názvu."
+    },   
+    {
+      "op": "core/text-transform",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "columnName": "oldORgrey",
+      "expression": "grel:if(and(isNonBlank(cells[\"bl_publisher\"].value),isBlank(value)),if(cells[\"bl_publisher\"].value.contains(/(archiv|asociace|druzst|gymna[zs]i|(?<!knizni)klub|knihov|kraj|mest|mu[sz]e(a|jni|um)|obc[ei]|obec|okres|region|sdruzen|spol[e]?k|ucilist|(zakladni|stredni|(vyso|umelec)k(a|e|ych))skol)/),true,null),value)",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 10,
+      "description": "oldORgrey: Třetí kolo hledání šedé a staré literatury. Přidá TRUE tam, kde je podezřelé slovo v nakladatelském klíči."
+    },
+    {
+      "op": "core/text-transform",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "columnName": "oldORgrey",
+      "expression": "grel:if(and(isBlank(value),isNonBlank(cells[\"OAI\"].value),isNonBlank(cells[\"genre\"].value)),if(contains(join(row.record.cells[\"genre\"].value,\" \"),/(brožury|disertace|dokumenty|hry|katalogy|normy|práce|programy|přednášky|ročenky|sborníky|separáty|skripta|soupisy|studie|texty|tisky|zákony|zprávy)/),true,null),value)",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 10,
+      "description": "oldORgrey: Čtvrté kolo hledání šedé a staré literatury. Přidá TRUE tam, kde je podezřelé slovo v žánru."
+    },
+    {
+      "op": "core/text-transform",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "columnName": "oldORgrey",
+      "expression": "grel:if(and(isBlank(value),isNonBlank(cells[\"OAI\"].value),isNonBlank(cells[\"650\"].value)),if(contains(trim(toLowercase(replace(replace(join(join(row.record.cells[\"650\"].value,\" \").find(/\\$a[^\\$]+/),\" \"),/\\$a/,\" \"),/[^\\p{L}]+/,\" \"))),/(region|města|obce)/),true,null),value)",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 10,
+      "description": "oldORgrey: Páté kolo hledání šedé a staré literatury. Přidá TRUE tam, kde je podezřelé slovo ve věcné autoritě."
+    },
+    {
+      "op": "core/text-transform",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "columnName": "oldORgrey",
+      "expression": "grel:if(and(isBlank(value),isNonBlank(cells[\"OAI\"].value),isNonBlank(cells[\"653\"].value)),if(contains(trim(toLowercase(replace(replace(join(join(row.record.cells[\"653\"].value,\" \").find(/\\$a[^\\$]+/),\" \"),/\\$a/,\" \"),/[^\\p{L}]+/,\" \"))),/(region|okres|obecní|obce|obec(\\s|$)|kraj|oblast|vlastivěd|muzej|muzea|archiv|spolky|výzkum|knihov)/),true,null),value)",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 10,
+      "description": "oldORgrey: Šesté kolo hledání šedé a staré literatury. Přidá TRUE tam, kde je podezřelé slovo ve volně tvořených klíčových slovech."
     },
 ////////////////////////////////////////////////////////////
-// GREY
+// 650 a 653 odfláknuté. Odmazat false.
 ////////////////////////////////////////////////////////////
     {
         "op": "core/column-addition",

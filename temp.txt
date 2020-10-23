@@ -1,3 +1,8 @@
+if(and(isBlank(value),isNonBlank(cells["OAI"].value),isNonBlank(cells["650"].value)),if(contains(trim(toLowercase(replace(replace(join(join(row.record.cells["650"].value," ").find(/\$a[^\$]+/)," "),/\$a/," "),/[^\p{L}]+/," "))),/(region|města|obce)/),true,null),value)
+
+
+
+
     {
         "op": "core/column-addition",
         "engineConfig": {
