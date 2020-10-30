@@ -1,4 +1,4 @@
-# Popis funkce složitějších výrazů a prostor pro návrhy jejich vylepšení:
+# Popis funkce složitějších nebo méně zřejmých výrazů a prostor pro návrhy jejich vylepšení:
 
 **PŘI ÚPRAVÁCH POZOR!!!**
 Ptáme-li se, zda NULL obsahuje něco, výsledkem není FALSE (boolean), ale chyba.
@@ -76,6 +76,8 @@ Lze sem přidat jakýkoliv jiný nežádoucí výraz, který se vyskytuje v náz
 ### Co to dělá:
 Hledá podezřelá slova, která by mohla naznačovat, že jde o monograficky popsaný seriál, přičemž vylučuje slova, která jsou typická u vícedílných monografií.
 
+Bere v potaz i rozpoznaná periodika, protože i takové záznamy mohou být chybně rozepsány po kusech.
+
 ### Co s tím lze dělat dál:
 Lze přidávat další výjimky do "blacklistu" či "whitelistu".
 
@@ -99,6 +101,21 @@ Lze přidávat další výjimky do "blacklistu" či "whitelistu".
 * r
 * roč
 * ročník
+
+## 6596: Detekce monograficky popsaných seriálů na základě opakujícího se názvu (sloupec `245aSerialTest`)
+
+`if(and(isNonBlank(value),facetCount(value,'value','245aSerialTest')>1),true,null)`
+
+### Co to dělá:
+Za kusově popsané pokračující zdroje se považují opakující se tituly (pouze písmena), protože to bývá v těchto případech obvyklé.
+
+### Co může dělat problémy:
+Je-li v knihovně např. jen jediný svázaný ročník nějakého titulu, případně příloha či zvlášní vydání, faseta jej neodchytí.
+
+### Co s tím lze dělat dál:
+Ještě před aplikací fasety sjednotit zápis ročníků a čísel (tj. "číslo" na "č", "roč" a "ročník" na "r"). Nepomůže to u seriálů, které jsou v knihovně opravdu jen jednou, ale pomůže zachytit různě zapsaná čísla téhož periodika.
+
+Pokud sem bude padat velké množství vícedílných monografií, lze zvyšovat minimální požadovaný počet opakovaných hodnot. Samozřejmě pak přibudou neodchycené seriály.
 
 ## 6609: Příprava sloupce pro hledání zatoulaných 245$c (sloupec `displaced245c`)
 
@@ -236,3 +253,160 @@ Upravovat podmínky.
 * zpěvník
 * škola hry na
 Pozor, nedávat věci jako "etudy", "pro klavír" apod. Jednak je toho moc, jednak to mohou obsahovat i nehudebniny (Kreutzerova sonáta od Tolstého) a taky by tam napadaly špatně určená audia (na ty lze ale dodělat filtr).
+
+## 6739: Indikátor šedé literatury - 1. krok (sloupec `oldORgrey`)
+
+`if(isBlank(cells[\"OAI\"].value),null,if(or(isBlank(cells[\"nezdedup\"].value),isNonBlank(cells[\"no996\"].value),not(cells[\"format\"].value.contains(/BOOKS/)),isNonBlank(cells[\"noYear\"].value),isNonBlank(cells[\"yearMismatch\"].value),isNonBlank(cells[\"245aSerialTest\"].value),isNonBlank(cells[\"titulNosic\"].value),isNonBlank(cells[\"neMapy\"].value),isNonBlank(cells[\"neNoty\"].value),isNonBlank(cells[\"zCyklu\"].value))\n,false,if(cells[\"rok\"].value<1890,true,null)))`
+
+### Co to dělá:
+Vyrobí sloupec a v něm označí jako FALSE záznamy, které jsou aspoň jedno z: 
+* zdeduplikované
+* bez jednotek
+* ne-knihy
+* bez data vydání
+* s vnitřně konfilktním datem vydání
+* ne-knihy zapsané jako knihy (na základě předchozích sloupců)
+* cykly
+Tyhle věci jsou buď v pořádku, nezajímají nás, nebo se nezdeduplikovaly z již rozpoznaných důvodů.
+
+Za zvážení stojí vyloučit z šedé literatury i vše, co má ISBN, protože to pak není šedá literatura. Pořád to ale můžou být nějaké regionální věci a vlastní náklady, kde nebyl dodán povinný výtisk. Navíc to zatím nevadí dalším výpočtům.
+
+FALSE hodnoty se nakonec vynulují, ale napřed se ještě použijí pro jiný výpočet (hledání záznamů bez ISBN).
+
+Jako TRUE označí záznamy:
+* 1890 a starší
+
+### Co s tím lze dělat dál:
+Může se ukázat, že dělat společný sloupec pro šedou a starší literaturu nebyl dobrý nápad.
+
+## 6752: Indiátor šedé literatury - 2. krok (sloupec `oldORgrey`)
+
+`if(and(isNonBlank(cells[\"titul\"].value),isBlank(value)),if(contains(trim(toLowercase(replace(cells[\"titul\"].value,/[^\\p{L}]+/,\" \"))),/(^|\\s)(katalog|plán|program|(prů|vý)zkum|report|ročenka|sborník|soupis|studie|úplné znění|zpráva)(\\s|$)/),true,null),value)`
+
+### Co to dělá:
+Jako TRUE označí dosud ne-TRUE a ne-FALSE záznamy, které mají v názvu:
+* katalog
+* plán
+* program
+* (prů|vý)zkum
+* report
+* ročenka
+* sborník
+* soupis
+* studie
+* úplné znění
+* zpráva 
+
+### Co s tím lze dělat dál:
+První nastavení podmínek bylo udělané převážně podle slov z formálních deskriptorů, které se docela často vyskytují v názvech šedé literatury. Samozřejmě to všechno nemusí být šedá literatura.
+
+Tj. lze přidávat či ubírat slova, případně jejich předpony a koncovky.
+
+## 6765: Indikátor šedé literatury - 3. krok (sloupec `oldORgrey`)
+
+`if(and(isNonBlank(cells[\"bl_publisher\"].value),isBlank(value)),if(cells[\"bl_publisher\"].value.contains(/(archiv|asociace|druzst|gymna[zs]i|(?<!knizni)klub|knihov|kraj|mest|mu[sz]e(a|jni|um)|obc[ei]|obec|okres|region|sdruzen|spol[e]?k|ucilist|(zakladni|stredni|(vyso|umelec)k(a|e|ych))skol)/),true,null),value)`
+
+### Co to dělá:
+Jako TRUE označí dosud ne-TRUE a ne-FALSE záznamy, které mají ve vydavatelském klíči:
+* archiv
+* asociace
+* druzst
+* gymna[zs]i
+* (?<!knizni)klub *tj. různé kluby, kromě Knižního klubu*
+* knihov
+* kraj
+* mest
+* mu[sz]e(a|jni|um)
+* obc[ei]
+* obec
+* okres
+* region
+* sdruzen
+* spol[e]?k
+* ucilist
+* (zakladni|stredni|(vyso|umelec)k(a|e|ych))skol
+
+### Co s tím lze dělat dál:
+Ubírat a přidávat výrazy dle potřeby. Určitě sem napadá spousta ne-šedé literatury - když jí bude příliš mnoho, bude to třeba přehodnotit.
+
+## 6778: Indikátor šedé literatury - 4. krok (sloupec `oldORgrey`)
+
+`if(and(isBlank(value),isNonBlank(cells[\"OAI\"].value),isNonBlank(cells[\"genre\"].value)),if(contains(join(row.record.cells[\"genre\"].value,\" \"),/(brožury|disertace|dokumenty|hry|katalogy|normy|práce|programy|přednášky|ročenky|sborníky|separáty|skripta|soupisy|studie|texty|tisky|zákony|zprávy)/),true,null),value)`
+
+### Co to dělá:
+Jako TRUE označí dosud ne-TRUE a ne-FALSE záznamy, které mají žánr/formu obsahující:
+* brožury
+* disertace
+* dokumenty
+* hry
+* katalogy
+* normy
+* práce
+* programy
+* přednášky
+* ročenky
+* sborníky
+* separáty
+* skripta
+* soupisy
+* studie
+* texty
+* tisky
+* zákony
+* zprávy
+
+### Co s tím lze dělat dál:
+Vybrány byly výrazy, které se (skoro všechny) vyskytovaly v nějakém ne úplně aktuálním seznamu formálních deskriptorů (třeba brožury tam nebyly, i když existují jako fd). Z nich pak byly vybrány ty, které se v nějakém nezanedbatelném množství vyskytují v datech (>10 000).
+
+Lze tedy přidávat a ubírat výrazy, přičemž je třeba mít na paměti, že se pracuje se sloupcem `genre`, který neobsahuje smysluplné hodnoty u cizojazyčných termínů.
+
+## 6791: Indikátor šedé literatury - 5. krok (sloupec `oldORgrey`)
+
+`if(and(isBlank(value),isNonBlank(cells[\"OAI\"].value),isNonBlank(cells[\"650\"].value)),if(contains(trim(toLowercase(replace(replace(join(join(row.record.cells[\"650\"].value,\" \").find(/\\$a[^\\$]+/),\" \"),/\\$a/,\" \"),/[^\\p{L}]+/,\" \"))),/(region|města|obce)/),true,null),value)`
+
+### Co to dělá:
+Jako TRUE označí dosud ne-TRUE a ne-FALSE záznamy, které mají v podpolích 650$a:
+* region
+* města
+* obce
+
+### Co s tím lze dělat dál:
+První tři podmínky jsou jen hrubý nástřel pro začátek. Ale možná s tím ani netřeba dělat nic dalšího. Pole 650 mívají "slušné", často přebrané záznamy, které jsou zdeduplikované. To by musela být knihovna, kde si skutečně dávají práci s hledáním správných věcných autorit při vlastnoruční katalogizaci.
+
+## 6804: Indikátor šedé literatury - 6. krok (sloupec `oldORgrey`)
+
+`if(and(isBlank(value),isNonBlank(cells[\"OAI\"].value),isNonBlank(cells[\"653\"].value)),if(contains(trim(toLowercase(replace(replace(join(join(row.record.cells[\"653\"].value,\" \").find(/\\$a[^\\$]+/),\" \"),/\\$a/,\" \"),/[^\\p{L}]+/,\" \"))),/(region|okres|obecní|obce|obec(\\s|$)|kraj|oblast|vlastivěd|muzej|muzea|archiv|spolky|výzkum|knihov)/),true,null),value)`
+
+### Co to dělá:
+Jako TRUE označí dosud ne-TRUE a ne-FALSE záznamy, které mají v podpolích 653$a:
+* region
+* okres
+* obecní
+* obce
+* obec
+* kraj
+* oblast
+* vlastivěd
+* muzej
+* muzea
+* archiv
+* spolky
+* výzkum
+* knihov
+
+### Co s tím lze dělat dál:
+Hodně věcí. Pole 653 bývá v malých knihovnách univerzálním polem na označování čehokoliv.
+
+Je ale třeba dávat pozor. Už je vyzkoušeno, že přidání výrazů pro mapy nebo hudebniny nedělá dobrotu, i když je to v některých jediný způsob, jak poznat všechny záznamy pro tyto typy dokumentu. U takových knihoven už si radši udělejme filtr ručně.
+
+## 6817: Hledání záznamů s pravděpodobně chybějícím ISBN (sloupec `noISN`)
+
+`if(isBlank(cells[\"ISN\"].value),if(isNonBlank(cells[\"rok\"].value),if(cells[\"rok\"].value<1989,null,if(or(isNonBlank(cells[\"oldORgrey\"].value),contains(cells[\"title\"].value,/[^0-9]+[0-9]{4}/)),null,true)),null),null)`
+
+### Co to dělá:
+Hledá knihy od 1989, u které nemají ISBN a nebyl u nich rozpoznán jiný problém. Vylučuje záznamy s aspoň čtyřciferným číslem následujícím za nečíslicí v názvovém klíči (kvůli vyloučení harlekýnek, které se často píší s rokem v názvu, příloh a zvláštních vydání).
+
+Po skončení tohoto kroku se vynulují FALSE hodnoty ve sloupci oldORgrey.
+
+### Co s tím lze dělat dál:
+Udělat něco i na ISSN, ale tam se to hůř poznává u dlouho vycházejících titulů.

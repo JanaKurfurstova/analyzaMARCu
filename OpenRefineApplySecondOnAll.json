@@ -45,7 +45,7 @@
           {
             "type": "list",
             "name": "Column 1",
-            "expression": "grel:contains(value,/([a-z]|\\W)/)",
+            "expression": "grel:if(isBlank(value),true,contains(value,/([a-z]|\\W)/)))",
             "columnName": "Column 1",
             "invert": false,
             "omitBlank": false,
@@ -64,7 +64,7 @@
         ],
         "mode": "row-based"
       },
-      "description": "Odstranění balastních řádků (kvůli anotacím v Kohách)."
+      "description": "Odstranění balastních řádků (kvůli anotacím v Kohách). POZOR, dělaly tu problémy i díry-prázdné řádky, v anotacích. Špatně se pak zformoval záznam. Proto jsou odmazány i řádky s prázdným začátkem. POZOR, jestli to nědělá jiné problémy."
     },
     {
         "op": "core/key-value-columnize",
@@ -6749,7 +6749,7 @@
         "mode": "record-based"
       },
       "columnName": "oldORgrey",
-      "expression": "grel:if(and(isNonBlank(cells[\"titul\"].value),isBlank(value)),if(contains(trim(toLowercase(replace(cells[\"titul\"].value,/[^\\p{L}]+/,\" \"))),/(^|\\s)(katalog|plán|program|(prů|vý)zkum|report|ročenka|sborník|soupis|studie|zpráva)(\\s|$)/),true,null),value)",
+      "expression": "grel:if(and(isNonBlank(cells[\"titul\"].value),isBlank(value)),if(contains(trim(toLowercase(replace(cells[\"titul\"].value,/[^\\p{L}]+/,\" \"))),/(^|\\s)(katalog|plán|program|(prů|vý)zkum|report|ročenka|sborník|soupis|studie|úplné znění|zpráva)(\\s|$)/),true,null),value)",
       "onError": "keep-original",
       "repeat": false,
       "repeatCount": 10,
@@ -6807,21 +6807,30 @@
       "repeatCount": 10,
       "description": "oldORgrey: Šesté kolo hledání šedé a staré literatury. Přidá TRUE tam, kde je podezřelé slovo ve volně tvořených klíčových slovech."
     },
-////////////////////////////////////////////////////////////
-// 650 a 653 odfláknuté. Odmazat false.
-////////////////////////////////////////////////////////////
     {
-        "op": "core/column-addition",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "baseColumnName": "rok",
-        "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"isbn\"].value),isBlank(cells[\"issn\"].value),isBlank(cells[\"isnValidity\"].value),value>=1989),\"missing\",null)",
-        "onError": "set-to-blank",
-        "newColumnName": "isnAfter1989",
-        "columnInsertIndex": 13,
-        "description": "Create column isnAfter1989 at index 13 based on column rok using expression grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"isbn\"].value),isBlank(cells[\"issn\"].value),isBlank(cells[\"isnValidity\"].value),value>=1989),\"missing\",null)"
-    },        
-
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "ISN",
+      "expression": "grel:if(isBlank(cells[\"ISN\"].value),if(isNonBlank(cells[\"rok\"].value),if(cells[\"rok\"].value<1989,null,if(or(isNonBlank(cells[\"oldORgrey\"].value),contains(cells[\"title\"].value,/[^0-9]+[0-9]{4}/)),null,true)),null),null)",
+      "onError": "set-to-blank",
+      "newColumnName": "noISN",
+      "columnInsertIndex": 24,
+      "description": "noISN: Hledá knihy od 1989, u které nemají ISBN a nebyl u nich rozpoznán jiný problém. Vylučuje záznamy s aspoň čtyřciferným číslem následujícím za nečíslicí v názvovém klíči (kvůli vyloučení harlekýnek, příloh a zvláštních vydání)."
+    },
+    {
+      "op": "core/text-transform",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "columnName": "oldORgrey",
+      "expression": "grel:if(value,true,null)",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 10,
+      "description": "oldORgrey: Nechá jen TRUE, vynuluje FALSE."
+    },
 ]
