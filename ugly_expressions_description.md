@@ -5,6 +5,8 @@ Ptáme-li se, zda NULL obsahuje něco, výsledkem není FALSE (boolean), ale chy
 
 Je-li v podmínce ověřování obsahu pole, je třeba jej napřed otestovat na prázdnost.
 
+Sloupce, které tady nemají popsaný způsob tvorby, mají dostačující vysvětlení přímo ve skriptu (řádky "description").
+
 ## 6180: Konsolidace českých hodnot v 655$ (sloupec `genre`)
 
 `if(contains(replace(value,/\\s\\(.*\\)/,\"\"),/\\s/),replace(replace(replace(value,/\\s\\(.*\\)/,\"\"),/[\\-\\p{L}]+([áéůý]|[cč]í|(?<!(vydá|cviče|jedná|sděle|naříze))ní|(?<!pomů)cky|(?<!(de|ti))sky|fi|antasy)([^\\p{L}]|$)/,\"\"),/^a\\s/,\"\").match(/^(\\p{L}+).*/)[0],replace(value,/\\s\\(.*\\)/,\"\"))`
@@ -404,9 +406,20 @@ Je ale třeba dávat pozor. Už je vyzkoušeno, že přidání výrazů pro mapy
 `if(isBlank(cells[\"ISN\"].value),if(isNonBlank(cells[\"rok\"].value),if(cells[\"rok\"].value<1989,null,if(or(isNonBlank(cells[\"oldORgrey\"].value),contains(cells[\"title\"].value,/[^0-9]+[0-9]{4}/)),null,true)),null),null)`
 
 ### Co to dělá:
-Hledá knihy od 1989, u které nemají ISBN a nebyl u nich rozpoznán jiný problém. Vylučuje záznamy s aspoň čtyřciferným číslem následujícím za nečíslicí v názvovém klíči (kvůli vyloučení harlekýnek, které se často píší s rokem v názvu, příloh a zvláštních vydání).
-
-Po skončení tohoto kroku se vynulují FALSE hodnoty ve sloupci oldORgrey.
+Hledá nezdeduplikované knihy od 1989, které nemají ISBN a nebyl u nich rozpoznán jiný problém. Vylučuje záznamy s aspoň čtyřciferným číslem následujícím za nečíslicí v názvovém klíči (kvůli vyloučení harlekýnek, které se často píší s rokem v názvu, příloh a zvláštních vydání).
 
 ### Co s tím lze dělat dál:
 Udělat něco i na ISSN, ale tam se to hůř poznává u dlouho vycházejících titulů.
+
+Udělat to i na zdeduplikované věci. Teď to není, protože využívá předchozího výpočtu, kde byly vyloučeny zdeduplikované záznamy.
+
+## 6830: Neurčené důvody nezdeduplikování (sloupec `zbytek`)
+
+`if(isNonBlank(value),if(or(isBlank(cells[\"bl_language\"].value),and(isNonBlank(cells[\"bl_language\"].value),cells[\"bl_language\"].value.contains(/(cze|slo|und|zxx)/))),if(and(isBlank(cells[\"oldORgrey\"].value),isBlank(cells[\"displaced245c\"].value),isBlank(cells[\"invalidISN\"].value),isBlank(cells[\"noISN\"].value)),true,null),null),null)`
+
+### Co to dělá:
+Jako TRUE označí nezdeduplikované české, slovenské či bezjazykové záznamy, u kterých se nenašel žádný společný důvod nezdeduplikování.
+
+Neoznačí záznamy, které se nebraly v potaz ani při hledání šedé a staré literatury. Kromě nich vyloučí ještě záznamy s neplatným ISBN či ISSN, s chybějícím ISBN (dle předchozího výpočtu) a s podezřením na přítomnost údajů o odpovědnosti v názvu.
+
+Po skončení tohoto kroku se vynulují FALSE hodnoty ve sloupci oldORgrey.

@@ -6193,7 +6193,7 @@
         "expression": "grel:toUppercase(value.match(/.*\\$a([^\\$]+).*/)[0])",
         "onError": "set-to-blank",
         "newColumnName": "040a",
-        "columnInsertIndex": 5,
+        "columnInsertIndex": 1,
         "description": "040a: Sigla původce záznamu. V některých systémech nemusí odpovídat realitě."
     },
     {
@@ -6232,7 +6232,7 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value",
         "onError": "set-to-blank",
         "newColumnName": "title",
-        "columnInsertIndex": 6,
+        "columnInsertIndex": 7,
         "description": "Create column title at index 7 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value"
     },
     {
@@ -6245,8 +6245,8 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value",
         "onError": "set-to-blank",
         "newColumnName": "author_string",
-        "columnInsertIndex": 9,
-        "description": "Create column author_string at index 10 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value"
+        "columnInsertIndex": 8,
+        "description": "Create column author_string at index 8 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6258,8 +6258,8 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value",
         "onError": "set-to-blank",
         "newColumnName": "author_auth_key",
-        "columnInsertIndex": 10,
-        "description": "Create column author_auth_key at index 11 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value"
+        "columnInsertIndex": 9,
+        "description": "Create column author_auth_key at index 9 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6284,8 +6284,8 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value",
         "onError": "set-to-blank",
         "newColumnName": "bl_language",
-        "columnInsertIndex": 7,
-        "description": "Create column bl_language at index 8 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value"
+        "columnInsertIndex": 3,
+        "description": "Create column bl_language at index 3 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6297,8 +6297,8 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"format\"].value",
         "onError": "set-to-blank",
         "newColumnName": "format",
-        "columnInsertIndex": 2,
-        "description": "Create column format index 2 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"format\"].value"
+        "columnInsertIndex": 4,
+        "description": "Create column format index 4 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"format\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6388,8 +6388,8 @@
         "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value",
         "onError": "set-to-blank",
         "newColumnName": "bl_publisher",
-        "columnInsertIndex": 20,
-        "description": "Create column bl_publisher at index 21 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value"
+        "columnInsertIndex": 10,
+        "description": "Create column bl_publisher at index 10 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6466,7 +6466,7 @@
       "expression": "grel:if(and(isNonBlank(value),not(value.contains(/.*ARTICLES.*/)),isBlank(cells[\"996\"].value)),true,null)",
       "onError": "set-to-blank",
       "newColumnName": "no996",
-      "columnInsertIndex": 7,
+      "columnInsertIndex": 9,
       "description": "no996: Nečlánkové záznamy bez jednotek jsou TRUE."
     },
     {
@@ -6518,7 +6518,7 @@
       "expression": "grel:if(and(isNonBlank(cells[\"nezdedup\"].value),cells[\"format\"].value.contains(/.*ARTICLES.*/)),\"773\"+replace(join(sort(cells[\"773\"].value.find(/\\$./)),\"\"),/\\$/,\"\"),null)",
       "onError": "set-to-blank",
       "newColumnName": "773check",
-      "columnInsertIndex": 9,
+      "columnInsertIndex": 18,
       "description": "773check: Seznam podpolí 773 u nezdeduplikovaných článků"
     },
     {
@@ -6531,7 +6531,7 @@
       "expression": "grel:cells[\"996\"].value.match(/.*\\$s([^\\$]+).*/)[0]",
       "onError": "set-to-blank",
       "newColumnName": "996s",
-      "columnInsertIndex": 9,
+      "columnInsertIndex": 10,
       "description": "996s"
     },
     {
@@ -6557,7 +6557,7 @@
       "expression": "grel:if(and(isNonBlank(value),isBlank(cells[\"no996\"].value),isBlank(cells[\"autor\"].value),isBlank(cells[\"isbn\"].value),cells[\"format\"].value.contains(/.*(BOOKS|PERIODICALS).*/),cells[\"titul\"].value.contains(/^\\S.+\\s[0-9]+.*/)),if(cells[\"245aMultiTest\"].value.contains(/(^|\\s)(díl|část|sv|svazek|zákon[y]?|ency[\\p{L}]lop[\\p{L}]+di[\\p{L}]+|slovník|zpráva|rozpočet|ročenka|almanach|sborník)(\\s|$)/),null,if(cells[\"245aMultiTest\"].value.contains(/[\\p{L}]+\\s(č|číslo|r|roč|ročník)(\\s|$)/),cells[\"245aMultiTest\"].value,null)),null)",
     "onError": "set-to-blank",
     "newColumnName": "245aSerialTest",
-    "columnInsertIndex": 30,
+    "columnInsertIndex": 33,
     "description": "245aSerialTest: Sloupec pro odchyt kusově zapsaných seriálů."
     },
     {
@@ -6609,7 +6609,7 @@
       "expression": "grel:if(and(isBlank(cells[\"no996\"].value),if(isBlank(cells[\"bl_language\"].value),true,cells[\"bl_language\"].value.contains(/(cze|slo|und|zxx)/))),trim(replace(replace(value,/[^\\p{L}0-9\\s]/,\" \"),/\\s+/,\" \")),null)",
       "onError": "set-to-blank",
       "newColumnName": "displaced245c",
-      "columnInsertIndex": 31,
+      "columnInsertIndex": 17,
       "description": "displaced245c: Připraví názvové hodnoty pro hledání zatoulaných údajů o odpovědnosti. Vytvoří se pouze pro nezdeduplikované české a slovenské věci s jednotkami."
     },
     {
@@ -6635,7 +6635,7 @@
       "expression": "grel:if(isNonBlank(cells[\"OAI\"].value),if(isBlank(value),\"1\",if(contains(value.match(/.*\\$a([^\\$]+).*/)[0],/[0-9]/),value.match(/.*\\$a[^0-9]*([0-9]+).*/)[0],trim(toLowercase(replace(replace(value.match(/.*\\$a([^\\$]+).*/)[0],/[^\\p{L}]/,\" \"),/\\s+/,\" \"))))),null)",
       "onError": "set-to-blank",
       "newColumnName": "250a",
-      "columnInsertIndex": 6,
+      "columnInsertIndex": 24,
       "description": "250a: Číslo vydání pro kontrolu duplicit."
     },
     {
@@ -6648,7 +6648,7 @@
       "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),true,null),null)",
       "onError": "set-to-blank",
       "newColumnName": "neMapy",
-      "columnInsertIndex": 10,
+      "columnInsertIndex": 16,
       "description": "neMapy: Hledání kartografických dokumentů zapsaných jako textové či vizuální dokumenty. Pouze pro záznamy s jednotkami."
     },
     {
@@ -6661,7 +6661,7 @@
       "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),true,null)\n,null)",
       "onError": "set-to-blank",
       "newColumnName": "neNoty",
-      "columnInsertIndex": 10,
+      "columnInsertIndex": 16,
       "description": "neNoty: Hledání hudebnin zapsaných jako textové dokumenty. Pouze pro záznamy s jednotkami."
     },
     {
@@ -6674,7 +6674,7 @@
       "expression": "grel:if(isNonBlank(value),if(value.contains(/\\$i[Zz] cyklu/),trim(toLowercase(replace(replace(value.match(/.*\\$t([^\\$]+).*/)[0],/[^\\p{L}0-9\\s]/,\" \"),/\\s+/,\" \")))\n,null),null)",
       "onError": "set-to-blank",
       "newColumnName": "zCyklu",
-      "columnInsertIndex": 31,
+      "columnInsertIndex": 25,
       "description": "zCyklu: Faseta na cykly z 787."
     },
     {
@@ -6687,7 +6687,7 @@
       "expression": "grel:if(and(isNonBlank(cells[\"028\"].value),isBlank(cells[\"no996\"].value),isNonBlank(cells[\"nezdedup\"].value),cells[\"format\"].value.contains(/AUDIO/)),if(isNonBlank(value),\"ok\",cells[\"028\"].value.substring(0,1)),null)",
       "onError": "set-to-blank",
       "newColumnName": "pnCheck",
-      "columnInsertIndex": 31,
+      "columnInsertIndex": 23,
       "description": "pnCheck: Zjišťuje podíl rozpoznatelných nakladatelských čísel (OK) v nezdeduplikovaných záznamech audiodokumentů, u nerozpoznatelných vypíše první indikátor. Pouze pro záznamy s jednotkami."
     },
     {
@@ -6700,7 +6700,7 @@
       "expression": "grel:if(and(isNonBlank(value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/AUDIO|VIDEO/)),if(isBlank(cells[\"nezdedup\"].cells),\"zdedup\",\"nezdedup\"),null)",
       "onError": "set-to-blank",
       "newColumnName": "eanCheck",
-      "columnInsertIndex": 30,
+      "columnInsertIndex": 23,
       "description": "eanCheck: Zjišťuje podíl zdeduplikovaných a nezdeduplikovaných AV záznamů s EANem a jednotkami."
     },
     {
@@ -6713,7 +6713,7 @@
       "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),isNonBlank(value)),if(isBlank(cells[\"nezdedup\"].cells),\"zdedup\",\"nezdedup\"),null)",
       "onError": "set-to-blank",
       "newColumnName": "cnbCheck",
-      "columnInsertIndex": 28,
+      "columnInsertIndex": 23,
       "description": "cnbCheck: Zjišťuje podíl zdeduplikovaných a nezdeduplikovaných záznamů s čČNB a jednotkami."
     },
     {
@@ -6726,7 +6726,7 @@
       "expression": "grel:if(and(isBlank(cells[\"author_string\"].value),or(isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/ARTICLES/))),null,if(isBlank(value),if(isBlank(cells[\"nezdedup\"].value),\"A0D1\",\"A0D0\"),if(isBlank(cells[\"nezdedup\"].value),\"A1D1\",\"A1D0\")))",
       "onError": "set-to-blank",
       "newColumnName": "authkeyCheck",
-      "columnInsertIndex": 42,
+      "columnInsertIndex": 20,
       "description": "authkeyCheck: U záznamů s hlavním personálním autorem (s jednotkami nebo analytické) rozlišuje: A0D0 - nezdeduplikované bez autority, A0D1 - zdeduplikované bez autority, A1D0 - nezdeduplikované s autoritou, A1D1 - zdeduplikované s autoritou."
     },
     {
@@ -6736,10 +6736,10 @@
         "mode": "record-based"
       },
       "baseColumnName": "format",
-      "expression": "grel:if(isBlank(cells[\"OAI\"].value),null,if(or(isBlank(cells[\"nezdedup\"].value),isNonBlank(cells[\"no996\"].value),not(cells[\"format\"].value.contains(/BOOKS/)),isNonBlank(cells[\"noYear\"].value),isNonBlank(cells[\"yearMismatch\"].value),isNonBlank(cells[\"245aSerialTest\"].value),isNonBlank(cells[\"titulNosic\"].value),isNonBlank(cells[\"neMapy\"].value),isNonBlank(cells[\"neNoty\"].value),isNonBlank(cells[\"zCyklu\"].value))\n,false,if(cells[\"rok\"].value<1890,true,null)))",
+      "expression": "grel:if(isBlank(cells[\"OAI\"].value),null,if(or(isBlank(cells[\"nezdedup\"].value),isNonBlank(cells[\"no996\"].value),not(cells[\"format\"].value.contains(/BOOKS/)),isNonBlank(cells[\"noYear\"].value),isNonBlank(cells[\"yearMismatch\"].value),isNonBlank(cells[\"245aSerialTest\"].value),isNonBlank(cells[\"titulNosic\"].value),isNonBlank(cells[\"neMapy\"].value),isNonBlank(cells[\"neNoty\"].value),isNonBlank(cells[\"zCyklu\"].value)),false,if(cells[\"rok\"].value<1890,true,null)))",
       "onError": "set-to-blank",
       "newColumnName": "oldORgrey",
-      "columnInsertIndex": 10,
+      "columnInsertIndex": 19,
       "description": "oldORgrey: První kolo hledání šedé a staré literatury. Vyloučí nejjednodušeji vyloučitelné záznamy a označí věci starší než 1890."
     },
     {
@@ -6817,8 +6817,21 @@
       "expression": "grel:if(isBlank(cells[\"ISN\"].value),if(isNonBlank(cells[\"rok\"].value),if(cells[\"rok\"].value<1989,null,if(or(isNonBlank(cells[\"oldORgrey\"].value),contains(cells[\"title\"].value,/[^0-9]+[0-9]{4}/)),null,true)),null),null)",
       "onError": "set-to-blank",
       "newColumnName": "noISN",
-      "columnInsertIndex": 24,
-      "description": "noISN: Hledá knihy od 1989, u které nemají ISBN a nebyl u nich rozpoznán jiný problém. Vylučuje záznamy s aspoň čtyřciferným číslem následujícím za nečíslicí v názvovém klíči (kvůli vyloučení harlekýnek, příloh a zvláštních vydání)."
+      "columnInsertIndex": 25,
+      "description": "noISN: Hledá nezdeduplikované knihy od 1989, u které nemají ISBN a nebyl u nich rozpoznán jiný problém. Vylučuje záznamy s aspoň čtyřciferným číslem následujícím za nečíslicí v názvovém klíči (kvůli vyloučení harlekýnek, příloh a zvláštních vydání)."
+    },
+    {
+      "op": "core/column-addition",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "baseColumnName": "OAI",
+      "expression": "grel:if(isNonBlank(value),if(or(isBlank(cells[\"bl_language\"].value),and(isNonBlank(cells[\"bl_language\"].value),cells[\"bl_language\"].value.contains(/(cze|slo|und|zxx)/))),if(and(isBlank(cells[\"oldORgrey\"].value),isBlank(cells[\"displaced245c\"].value),isBlank(cells[\"invalidISN\"].value),isBlank(cells[\"noISN\"].value)),true,null),null),null)",
+      "onError": "set-to-blank",
+      "newColumnName": "zbytek",
+      "columnInsertIndex": 45,
+      "description": "zbytek: České, slovenské a bezjazykové záznamy bez jednotek, u kterých nebyla zjištěna příčina nezdeduplikování v předchozích krocích."
     },
     {
       "op": "core/text-transform",
@@ -6832,5 +6845,18 @@
       "repeat": false,
       "repeatCount": 10,
       "description": "oldORgrey: Nechá jen TRUE, vynuluje FALSE."
+    },
+    {
+      "op": "core/text-transform",
+      "engineConfig": {
+        "facets": [],
+        "mode": "record-based"
+      },
+      "columnName": "nezdedup",
+      "expression": "grel:if(isNonBlank(value),true,null)",
+      "onError": "keep-original",
+      "repeat": false,
+      "repeatCount": 10,
+      "description": "nezdedup: Identifikátory přepsány na TRUE."
     },
 ]
