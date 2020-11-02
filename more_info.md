@@ -5,8 +5,6 @@ Ptáme-li se, zda NULL obsahuje něco, výsledkem není FALSE (boolean), ale chy
 
 Je-li v podmínce ověřování obsahu pole, je třeba jej napřed otestovat na prázdnost.
 
-Sloupce, které tady nemají popsaný způsob tvorby, mají dostačující vysvětlení přímo ve skriptu (řádky "description").
-
 ## 6180: Konsolidace českých hodnot v 655$ (sloupec `genre`)
 
 `if(contains(replace(value,/\\s\\(.*\\)/,\"\"),/\\s/),replace(replace(replace(value,/\\s\\(.*\\)/,\"\"),/[\\-\\p{L}]+([áéůý]|[cč]í|(?<!(vydá|cviče|jedná|sděle|naříze))ní|(?<!pomů)cky|(?<!(de|ti))sky|fi|antasy)([^\\p{L}]|$)/,\"\"),/^a\\s/,\"\").match(/^(\\p{L}+).*/)[0],replace(value,/\\s\\(.*\\)/,\"\"))`
@@ -56,7 +54,7 @@ Bere jen nezdeduplikované věci s jednotkama a články.
 
 ## 6505: Indikátor nevalidních ISBN, ISSN a ISMN (sloupec `invalidISN`)
 
-`if(and(isBlank(cells[\"no996\"].value),or(value.contains(/.*BOOKS.*/),value.contains(/.*PERIODICALS.*/))),if(and(isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),if(and(isBlank(cells[\"issn\"].value),isNonBlank(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),null)),null)`
+`if(and(isBlank(cells[\"no996\"].value),or(value.contains(/.*BOOKS.*/),value.contains(/.*PERIODICALS.*/))),if(and(isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),if(and(isBlank(cells[\"issn\"].value),isNonBlank(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,if(isBlank(cells[\"nezdedup\"].value),\"zdedup\",\"nezdedup\"),null),null)),null)`
 
 ### Co to dělá:
 Označuje záznamy, kde je nějaký shluk znaků, které se podobají ISBN, ISSN nebo ISMN, ale neutvořil se z nich klíč, protože jsou nevalidní.
@@ -197,16 +195,14 @@ Je-li 250$a prázdné, dosadí "1".
 
 ## 6648: Indikátor neurčených kartografických dokumentů (sloupec `neMapy`)
 
-`if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),true,null),null)`
+`if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),if(isBlank(cells[\"nezdedup\"].value),\"zdedup\",\"nezdedup\"),null),null)`
 
 ### Co to dělá:
-Pokud žánr nebo název naznačuje, že jde o kartografický dokument, pak TRUE.
+Pokud žánr nebo název naznačuje, že jde o kartografický dokument, pak "zdedup" nebo "nezdedup".
 
 V názvu se hledá měřítko nebo podezřelé slovo.
 
 Rezignace na rozpoznávání podle 653 (praxe měnších knihoven), protože pak tam leze cokoliv, co obsahuje třeba jen jednu mapu ve spoustě textu.
-
-Bere i zdeduplikované záznamy (schválně).
 
 ### Co s tím lze dělat dál:
 Lze upravovat **podmínky pro žánr"**
@@ -228,14 +224,12 @@ Lze upravovat podmínky pro názvové údaje.
 
 ## 6661: Indikátor neurčených hudebnin (sloupec `neNoty`)
 
-`if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),true,null)\n,null)`
+`if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),if(isBlank(cells[\"nezdedup\"].value),\"zdedup\",\"nezdedup\"),null)\n,null)`
 
 ### Co to dělá:
-Pokud žánr, název nebo volné klíčové slovo naznačuje, že jde o hudebninu, pak TRUE.
+Pokud žánr, název nebo volné klíčové slovo naznačuje, že jde o hudebninu, pak "zdedup" nebo "nezdedup".
 
 Odstraněno pravidlo pro odchytávání 245$h hudebnin bez kódovaných údajů (006|00 zde už nebudeme požadovat).
-
-Bere i zdeduplikované záznamy (schválně).
 
 ### Co s tím lze dělat dál:
 Upravovat podmínky.

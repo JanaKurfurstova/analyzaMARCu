@@ -6155,7 +6155,7 @@
         "onError": "keep-original",
         "repeat": false,
         "repeatCount": 10,
-        "description": "Odstranění diakritky z 300a."
+        "description": "Odstranění diakritky z 300doctype."
     },    
     {
         "op": "core/column-addition",
@@ -6203,23 +6203,10 @@
             "mode": "record-based"
         },
         "baseColumnName": "245",
-        "expression": "grel:if(or(isNonBlank(value.match(/.*\\$n([^\\$]+).*/)[0]),isNonBlank(value.match(/.*\\$p([^\\$]+).*/)[0])),true,null)",
-        "onError": "set-to-blank",
-        "newColumnName": "vicedil",
-        "columnInsertIndex": 6,
-        "description": "vicedil: 245 obsahuje $p nebo $n."
-    },
-    {
-        "op": "core/column-addition",
-        "engineConfig": {
-            "facets": [],
-            "mode": "record-based"
-        },
-        "baseColumnName": "245",
         "expression": "grel:toLowercase(trim(replace(replace(value.match(/.*\\$a([^\\$^\\]]+).*/)[0],/[^\\p{L} ]/,\" \"),/\\s+\/,\" \")))",
         "onError": "set-to-blank",
         "newColumnName": "245aMultiTest",
-        "columnInsertIndex": 7,
+        "columnInsertIndex": 6,
         "description": "245aMultiTest: Písmena z 245$a. Pomocný sloupec pro kontrolu duplicit."
     },   
     {
@@ -6229,11 +6216,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value",
         "onError": "set-to-blank",
         "newColumnName": "title",
-        "columnInsertIndex": 7,
-        "description": "Create column title at index 7 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value"
+        "columnInsertIndex": 6,
+        "description": "Create column title at index 6 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"title\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6242,11 +6229,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value",
         "onError": "set-to-blank",
         "newColumnName": "author_string",
-        "columnInsertIndex": 8,
-        "description": "Create column author_string at index 8 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value"
+        "columnInsertIndex": 7,
+        "description": "Create column author_string at index 7 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"author_string\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6255,11 +6242,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value",
         "onError": "set-to-blank",
         "newColumnName": "author_auth_key",
-        "columnInsertIndex": 9,
-        "description": "Create column author_auth_key at index 9 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value"
+        "columnInsertIndex": 8,
+        "description": "Create column author_auth_key at index 8 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"author_auth_key\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6268,11 +6255,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:toNumber(replace(cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"publication_year\"].value,\",\",\"\"))",
+        "expression": "grel:toNumber(replace(cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"publication_year\"].value,\",\",\"\"))",
         "onError": "set-to-blank",
         "newColumnName": "rok",
         "columnInsertIndex": 1,
-        "description": "Create column rok at index 1 based on column OAI using expression grel:toNumber(replace(cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"publication_year\"].value,\",\",\"\"))"
+        "description": "Create column rok at index 1 based on column OAI using expression grel:toNumber(replace(cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"publication_year\"].value,\",\",\"\"))"
     },
     {
         "op": "core/column-addition",
@@ -6281,11 +6268,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value",
         "onError": "set-to-blank",
         "newColumnName": "bl_language",
         "columnInsertIndex": 3,
-        "description": "Create column bl_language at index 3 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value"
+        "description": "Create column bl_language at index 3 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"bl_language\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6294,11 +6281,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"format\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"format\"].value",
         "onError": "set-to-blank",
         "newColumnName": "format",
         "columnInsertIndex": 4,
-        "description": "Create column format index 4 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"format\"].value"
+        "description": "Create column format index 4 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"format\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6307,11 +6294,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"isbn\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"isbn\"].value",
         "onError": "set-to-blank",
         "newColumnName": "isbn",
-        "columnInsertIndex": 10,
-        "description": "Create column isbn at index 10 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"isbn\"].value"
+        "columnInsertIndex": 9,
+        "description": "Create column isbn at index 9 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"isbn\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6320,11 +6307,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"issn\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"issn\"].value",
         "onError": "set-to-blank",
         "newColumnName": "issn",
-        "columnInsertIndex": 11,
-        "description": "Create column issn at index 11 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"issn\"].value"
+        "columnInsertIndex": 10,
+        "description": "Create column issn at index 10 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"issn\"].value"
     },    
     {
         "op": "core/column-addition",
@@ -6333,11 +6320,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"ismn\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"ismn\"].value",
         "onError": "set-to-blank",
         "newColumnName": "ismn",
-        "columnInsertIndex": 12,
-        "description": "Create column ismn at index 12 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"ismn\"].value"
+        "columnInsertIndex": 11,
+        "description": "Create column ismn at index 11 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"ismn\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6346,11 +6333,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"cnb\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"cnb\"].value",
         "onError": "set-to-blank",
         "newColumnName": "cnb",
-        "columnInsertIndex": 13,
-        "description": "Create column cnb at index 13 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"cnb\"].value"
+        "columnInsertIndex": 12,
+        "description": "Create column cnb at index 12 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"cnb\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6359,11 +6346,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"ean\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"ean\"].value",
         "onError": "set-to-blank",
         "newColumnName": "ean",
-        "columnInsertIndex": 14,
-        "description": "Create column ean at index 14 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"ean\"].value"
+        "columnInsertIndex": 13,
+        "description": "Create column ean at index 13 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"ean\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6372,11 +6359,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"publisher_number\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"publisher_number\"].value",
         "onError": "set-to-blank",
         "newColumnName": "publisher_number",
-        "columnInsertIndex": 15,
-        "description": "Create column publisher_number at index 15 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"publisher_number\"].value"
+        "columnInsertIndex": 14,
+        "description": "Create column publisher_number at index 14 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"publisher_number\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6385,11 +6372,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value",
+        "expression": "grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value",
         "onError": "set-to-blank",
         "newColumnName": "bl_publisher",
-        "columnInsertIndex": 10,
-        "description": "Create column bl_publisher at index 10 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value"
+        "columnInsertIndex": 9,
+        "description": "Create column bl_publisher at index 9 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_klice csv\", \"record_id\")[0].cells[\"bl_publisher\"].value"
     },
     {
         "op": "core/column-addition",
@@ -6398,11 +6385,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:replace(cell.cross(\"KNIHOVNA_interdup csv\",\"record_id\")[0].cells[\"slouceny\"].value,\",\",\"\")",
+        "expression": "grel:replace(cell.cross(\"KNIOHVNA_interdup csv\",\"record_id\")[0].cells[\"slouceny\"].value,\",\",\"\")",
         "onError": "set-to-blank",
         "newColumnName": "interdup",
         "columnInsertIndex": 2,
-        "description": "Create column interdup at index 2 based on column OAI using expression grel:replace(cell.cross(\"KNIHOVNA_interdup csv\",\"record_id\")[0].cells[\"slouceny\"].value,\",\",\"\")"
+        "description": "Create column interdup at index 2 based on column OAI using expression grel:replace(cell.cross(\"KNIOHVNA_interdup csv\",\"record_id\")[0].cells[\"slouceny\"].value,\",\",\"\")"
     },
     {
         "op": "core/column-addition",
@@ -6411,11 +6398,24 @@
           "mode": "row-based"
         },
         "baseColumnName": "OAI",
-        "expression": "grel:cell.cross(\"KNIHOVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\"",
+        "expression": "grel:cell.cross(\"KNIOHVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\"",
         "onError": "set-to-blank",
         "newColumnName": "nezdedup",
         "columnInsertIndex": 3,
-        "description": "Create column nezdedup at index 3 based on column OAI using expression grel:cell.cross(\"KNIHOVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\""
+        "description": "Create column nezdedup at index 3 based on column OAI using expression grel:cell.cross(\"KNIOHVNA_nezdeduplikovane txt\", \"OAI\")[0].cells[\"OAI\"].value\""
+    },
+    {
+        "op": "core/column-addition",
+        "engineConfig": {
+            "facets": [],
+            "mode": "record-based"
+        },
+        "baseColumnName": "245",
+        "expression": "grel:if(or(isNonBlank(value.match(/.*\\$n([^\\$]+).*/)[0]),isNonBlank(value.match(/.*\\$p([^\\$]+).*/)[0])),if(isBlank(cells[\"nezdedup\"].value),\"zdedup\",\"nezdedup\"),null)",
+        "onError": "set-to-blank",
+        "newColumnName": "vicedil",
+        "columnInsertIndex": 11,
+        "description": "vicedil: 245 obsahuje $p nebo $n."
     },
     {
         "op": "core/column-addition",
@@ -6493,7 +6493,7 @@
         "onError": "set-to-blank",
         "newColumnName": "noYear",
         "columnInsertIndex": 16,
-        "description": "noYear: Nezdeduplilované záznamy (s jednotkou nebo analytické), které nemají ani přibližné datum vydání."
+        "description": "noYear: Nezdeduplikované záznamy (s jednotkou nebo analytické), které nemají ani přibližné datum vydání."
     },
     {
         "op": "core/column-addition",
@@ -6502,11 +6502,11 @@
             "mode": "record-based"
         },
         "baseColumnName": "format",
-        "expression": "grel:if(and(isBlank(cells[\"no996\"].value),or(value.contains(/.*BOOKS.*/),value.contains(/.*PERIODICALS.*/))),if(and(isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),if(and(isBlank(cells[\"issn\"].value),isNonBlank(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),null)),null)",
+        "expression": "grel:if(and(isBlank(cells[\"no996\"].value),or(value.contains(/.*BOOKS.*/),value.contains(/.*PERIODICALS.*/))),if(and(isBlank(cells[\"isbn\"].value),isNonBlank(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"020\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,true,null),if(and(isBlank(cells[\"issn\"].value),isNonBlank(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0])),if(length(replace(cells[\"022\"].value.match(/.*\\$a([^\\$]+).*/)[0],/[^0-9xX\\-]/,\"\"))>6,if(isBlank(cells[\"nezdedup\"].value),\"zdedup\",\"nezdedup\"),null),null)),null)",
         "onError": "set-to-blank",
         "newColumnName": "invalidISN",
         "columnInsertIndex": 17,
-        "description": "invalidISN: Pokud existuje nějaký číselný údaj zadaný jako ISBN nebo ISSN, ale neutvořil se klíč, pak TRUE. Pouze záznamy s jednotkami."
+        "description": "invalidISN: Záznamy s jedntkami a nějakým číselným údajem zadaný jako ISBN nebo ISSN, ale neutvořil se klíč."
     },
     {
       "op": "core/column-addition",
@@ -6645,7 +6645,7 @@
         "mode": "record-based"
       },
       "baseColumnName": "format",
-      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),true,null),null)",
+      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS|VISUAL|OTHER/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(mapy|autoatlasy)$/),false),cells[\"titul\"].value.contains(/[0-9]+\\s*\\:\\s*\\[0-9]+/),and(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)((auto)?map[ay]|soubor[y]? map|autoatlas|atlas světa|plán[y]? měst[a]?)(\\s|$)/),not(contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(myšlenkov|t[ée]matick)/)))),if(isBlank(cells[\"nezdedup\"].value),\"zdedup\",\"nezdedup\"),null),null)",
       "onError": "set-to-blank",
       "newColumnName": "neMapy",
       "columnInsertIndex": 16,
@@ -6658,7 +6658,7 @@
         "mode": "record-based"
       },
       "baseColumnName": "format",
-      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),true,null)\n,null)",
+      "expression": "grel:if(and(isNonBlank(cells[\"OAI\"].value),isBlank(cells[\"no996\"].value),cells[\"format\"].value.contains(/BOOKS/)),if(or(if(isNonBlank(cells[\"genre\"].value),cells[\"genre\"].value.contains(/(hudebniny|partitury|zpěvníky)/),false),if(isNonBlank(cells[\"653\"].value),contains(toLowercase(cells[\"653\"].value),/\\$a(hudebniny|partitury|zpěvníky|noty)(\\s|$)/),false),contains(trim(toLowercase(replace(replace(cells[\"titul\"].value,/[^\\p{L}]/,\" \"),/\\s+/,\" \"))),/(^|\\s)(zpěvník|škola hry na)(\\s|$)/)),if(isBlank(cells[\"nezdedup\"].value),\"zdedup\",\"nezdedup\"),null)\n,null)",
       "onError": "set-to-blank",
       "newColumnName": "neNoty",
       "columnInsertIndex": 16,
@@ -6688,7 +6688,7 @@
       "onError": "set-to-blank",
       "newColumnName": "pnCheck",
       "columnInsertIndex": 23,
-      "description": "pnCheck: Zjišťuje podíl rozpoznatelných nakladatelských čísel (OK) v nezdeduplikovaných záznamech audiodokumentů, u nerozpoznatelných vypíše první indikátor. Pouze pro záznamy s jednotkami."
+      "description": "pnCheck: Označení rozpoznatelných nakladatelských čísel (OK) v nezdeduplikovaných záznamech audiodokumentů, u nerozpoznatelných vypíše první indikátor. Pouze pro záznamy s jednotkami."
     },
     {
       "op": "core/column-addition",
@@ -6701,7 +6701,7 @@
       "onError": "set-to-blank",
       "newColumnName": "eanCheck",
       "columnInsertIndex": 23,
-      "description": "eanCheck: Zjišťuje podíl zdeduplikovaných a nezdeduplikovaných AV záznamů s EANem a jednotkami."
+      "description": "eanCheck: Označení zdeduplikovaných a nezdeduplikovaných AV záznamů s EANem a jednotkami."
     },
     {
       "op": "core/column-addition",
@@ -6714,7 +6714,7 @@
       "onError": "set-to-blank",
       "newColumnName": "cnbCheck",
       "columnInsertIndex": 23,
-      "description": "cnbCheck: Zjišťuje podíl zdeduplikovaných a nezdeduplikovaných záznamů s čČNB a jednotkami."
+      "description": "cnbCheck: Označení zdeduplikovaných a nezdeduplikovaných záznamů s čČNB a jednotkami."
     },
     {
       "op": "core/column-addition",

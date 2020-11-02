@@ -1,4 +1,4 @@
- [
+[
     {
         "op": "core/text-transform",
         "engineConfig": {
@@ -10,7 +10,7 @@
         "onError": "keep-original",
         "repeat": false,
         "repeatCount": 10,
-        "description": "Text transform on cells in column Column 1 using expression grel:replace(value,/^LEADER /,'LDR ')"
+        "description": "LEADER na LDR."
     },
     {
         "op": "core/column-addition",
@@ -23,7 +23,7 @@
         "onError": "set-to-blank",
         "newColumnName": "Column 2",
         "columnInsertIndex": 1,
-        "description": "Create column Column 2 at index 1 based on column Column 1 using expression grel:value.substring(4)"
+        "description": "Rozdělení na sloupce: Označení pole - obsah pole."
     },
     {
         "op": "core/text-transform",
@@ -36,14 +36,42 @@
         "onError": "keep-original",
         "repeat": false,
         "repeatCount": 10,
-        "description": "Text transform on cells in column Column 1 using expression grel:value.substring(0,3)"
+        "description": "Třímístné označní pole."
+    },
+    {
+      "op": "core/row-removal",
+      "engineConfig": {
+        "facets": [
+          {
+            "type": "list",
+            "name": "Column 1",
+            "expression": "grel:if(isBlank(value),true,contains(value,/([a-z]|\\W)/)))",
+            "columnName": "Column 1",
+            "invert": false,
+            "omitBlank": false,
+            "omitError": false,
+            "selection": [
+              {
+                "v": {
+                  "v": true,
+                  "l": "true"
+                }
+              }
+            ],
+            "selectBlank": false,
+            "selectError": false
+          }
+        ],
+        "mode": "row-based"
+      },
+      "description": "Odstranění balastních řádků (kvůli anotacím v Kohách). POZOR, dělaly tu problémy i díry-prázdné řádky, v anotacích. Špatně se pak zformoval záznam. Proto jsou odmazány i řádky s prázdným začátkem. POZOR, jestli to nědělá jiné problémy."
     },
     {
         "op": "core/key-value-columnize",
         "keyColumnName": "Column 1",
         "valueColumnName": "Column 2",
         "noteColumnName": "",
-        "description": "Columnize by key column Column 1 and value column Column 2 with note column "
+        "description": "Překlopení tabulky do 90 stupňů."
     },
     {
         "op": "core/text-transform",
