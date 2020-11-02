@@ -157,11 +157,11 @@ Můžeme vytvářet fasety, které ale v projektu nezůstanou po restartu. Pokud
 
 **Custom text facet na neopakovatelné podpole**
 
-`value.match(/.*\$**a**([^\$]+).*/)[0]`
+`value.match(/.*\$a([^\$]+).*/)[0]`
 
 **Custom text facet na opakovatelné podpole**
 
-`replace(replace(join(sort(value.find(/\$**a**[^\$]+/)),""),/\$./,";"),/^\;/,"")`
+`replace(replace(join(sort(value.find(/\$a[^\$]+/)),""),/\$./,";"),/^\;/,"")`
 
 **Custom text facet na konkrétní znakové pozice**
 
