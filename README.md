@@ -155,14 +155,14 @@ Můžeme vytvářet vlastní sloupce, které zůstanou v projektu i po restartu.
 
 Můžeme vytvářet fasety, které ale v projektu nezůstanou po restartu. Pokud si ale předtím uložíme **Permalink**, lze je aplikovat znovu bez ručního klikání.
 
-## Custom text facet na neopakovatelné podpole
+**Custom text facet na neopakovatelné podpole**
 
 `value.match(/.*\$**a**([^\$]+).*/)[0]`
 
-## Custom text facet na opakovatelné podpole
+**Custom text facet na opakovatelné podpole**
 
 `replace(replace(join(sort(value.find(/\$**a**[^\$]+/)),""),/\$./,";"),/^\;/,"")`
 
-## Custom text facet na konkrétní znakové pozice
+**Custom text facet na konkrétní znakové pozice**
 
 `value.substring(odPočítánoOdNuly,doPočítánoOdJedné)`
